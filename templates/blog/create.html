@@ -1,6 +1,17 @@
+{% load static %}
+{% include 'header.html' %}
+
+<section class="section">
+  <div class="container">
+	
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
 
   <input type="submit" value="Submit">
 </form>
+
+  </div>
+</section>
+
+{% include 'footer.html' %}

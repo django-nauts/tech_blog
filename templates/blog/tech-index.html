@@ -87,6 +87,9 @@
                                         <small><a href="{% url 'blog_detail' post.pk %}" title="">{{ post.created_on.date }}</a></small>
                                         <small><a href="{% url 'blog_author' %}" title="">by Matilda</a></small>
                                         <small><a href="{% url 'blog_detail' post.pk %}" title=""><i class="fa fa-eye"></i> 1114</a></small>
+										<br>
+										<a href="{% url 'blog_update' post.pk %}"><img src="{% static 'images/edit.png' %}" alt="edit icon"></a>
+										<a href="{% url 'blog_delete' post.pk %}"><img src="{% static 'images/delete.png' %}" alt="delete icon"></a>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
 
