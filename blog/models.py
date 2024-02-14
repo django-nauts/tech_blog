@@ -11,9 +11,11 @@ class Category(models.Model):
 		return self.name
 
 
+
 class Post(models.Model):
-	title = models.CharField(max_length=255)
-	body = models.TextField()
+	cover = models.ImageField(upload_to="images/", default="default.jpg")
+	title = models.CharField(max_length=255, blank=False, null=False)
+	body = models.TextField(blank=False, null=False)
 	created_on = models.DateTimeField(auto_now_add=True)
 	last_modified = models.DateTimeField(auto_now=True)
 	categories = models.ManyToManyField("Category", related_name="posts")

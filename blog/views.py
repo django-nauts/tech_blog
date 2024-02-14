@@ -21,12 +21,16 @@ def blog_category(request, category):
 
 # Create a new post
 def blog_create(request):
-	form = PostForm(request.POST or None)
-	
-	if form.is_valid():
-		form.save()
-		return redirect('blog_index')
 
+	if request.method == "POST":
+		form = PostForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			form.save()
+			return redirect("blog_index")
+	else:
+		form = PostForm()
+		
 	context = {
 		"form": form,
 	}
@@ -35,11 +39,13 @@ def blog_create(request):
 
 # Home page
 def blog_index(request):
-	posts = Post.objects.all().order_by("-created_on")
-	context = {
-		"posts": posts,
-	}
-	return render(request, "blog/tech-index.html", context)
+
+	if request.method == "GET":
+		posts = Post.objects.all().order_by("-created_on")
+		context = {
+			"posts": posts,
+		}
+		return render(request, "blog/tech-index.html", context)
 
 
 # Show each post
@@ -54,11 +60,14 @@ def blog_detail(request, pk):
 # Update post
 def blog_update(request, pk):
 	post = get_object_or_404(Post, pk=pk)
-	form = PostForm(request.POST or None, instance=post)
 
-	if form.is_valid():
-		form.save()
-		return redirect("/post/" + str(pk))
+	if request.method == "POST":
+		form = PostForm(request.POST, request.FILES, instance=post)
+		if form.is_valid():
+			form.save()
+			return redirect("/post/" + str(pk))
+	else:
+		form = PostForm(instance=post)
 	
 	context = {
 		"post": post,
