@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 	'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
-	"blog.apps.BlogConfig",
+	'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-			BASE_DIR / "templates",
+			BASE_DIR / 'templates',
 		],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -125,11 +125,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
 

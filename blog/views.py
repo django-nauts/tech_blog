@@ -3,113 +3,113 @@ from django.shortcuts import (
 )
 
 from blog.models import Post
-from blog.forms import PostForm
+from blog.forms import PostForm, UpdatePostForm
 
 
 # Show specific category
 def blog_category(request, category):
 	posts = Post.objects.filter(
 		categories__name__contains=category
-	).order_by("-created_on")
+	).order_by('-created')
 	
 	context = {
-		"category": category,
-		"posts": posts,
+		'category': category,
+		'posts': posts,
 	}
-	return render(request, "blog/tech-category.html", context)
+	return render(request, 'blog/tech-category.html', context)
 
 
 # Create a new post
 def blog_create(request):
 
-	if request.method == "POST":
+	if request.method == 'POST':
 		form = PostForm(request.POST, request.FILES)
 
 		if form.is_valid():
 			form.save()
-			return redirect("blog_index")
+			return redirect('blog_index')
 	else:
 		form = PostForm()
 		
 	context = {
-		"form": form,
+		'form': form,
 	}
-	return render(request, "blog/create.html", context)
+	return render(request, 'blog/create.html', context)
 
 
 # Home page
 def blog_index(request):
 
-	if request.method == "GET":
-		posts = Post.objects.all().order_by("-created_on")
+	if request.method == 'GET':
+		posts = Post.published_posts.all().order_by('-created')
 		context = {
-			"posts": posts,
+			'posts': posts,
 		}
-		return render(request, "blog/tech-index.html", context)
+		return render(request, 'blog/tech-index.html', context)
 
 
 # Show each post
-def blog_detail(request, pk):
-	post = Post.objects.get(pk=pk)
+def blog_detail(request, slug):
+	post = Post.objects.get(slug=slug)
 	context = {
-		"post": post,
+		'post': post,
 	}
-	return render(request, "blog/tech-single.html", context)
+	return render(request, 'blog/tech-single.html', context)
 
 
 # Update post
-def blog_update(request, pk):
-	post = get_object_or_404(Post, pk=pk)
+def blog_update(request, slug):
+	post = get_object_or_404(Post, slug=slug)
 
-	if request.method == "POST":
-		form = PostForm(request.POST, request.FILES, instance=post)
+	if request.method == 'POST':
+		form = UpdatePostForm(request.POST, request.FILES, instance=post)
 		if form.is_valid():
 			form.save()
-			return redirect("/post/" + str(pk))
+			return redirect('blog_index')
 	else:
-		form = PostForm(instance=post)
+		form = UpdatePostForm(instance=post)
 	
 	context = {
-		"post": post,
-		"form": form,
+		'post': post,
+		'form': form,
 	}
-	return render(request, "blog/update.html", context)
+	return render(request, 'blog/update.html', context)
 
 
 # Delete post
-def blog_delete(request, pk):
+def blog_delete(request, slug):
 	context = {}
-	post = get_object_or_404(Post, pk=pk)
+	post = get_object_or_404(Post, slug=slug)
 
-	if request.method == "POST":
+	if request.method == 'POST':
 		post.delete()
 		return redirect('blog_index')
 
-	return render(request, "blog/delete.html", context)
+	return render(request, 'blog/delete.html', context)
 
 
 # Show author posts and information
 def blog_author(request):
 	context = {}
-	return render(request, "blog/tech-author.html", context)
+	return render(request, 'blog/tech-author.html', context)
 
 
 def blog_category_01(request):
 	context = {}
-	return render(request, "blog/tech-category-01.html", context)
+	return render(request, 'blog/tech-category-01.html', context)
 
 
 def blog_category_02(request):
 	context = {}
-	return render(request, "blog/tech-category-02.html", context)
+	return render(request, 'blog/tech-category-02.html', context)
 
 
 def blog_category_03(request):
 	context = {}
-	return render(request, "blog/tech-category-03.html", context)
+	return render(request, 'blog/tech-category-03.html', context)
 
 
 # Contact us
 def blog_contact(request):
 	context = {}
-	return render(request, "blog/tech-contact.html", context)
+	return render(request, 'blog/tech-contact.html', context)
