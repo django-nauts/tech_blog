@@ -105,19 +105,9 @@ def blog_author(request):
     return render(request, 'blog/tech-author.html', context)
 
 
-def blog_category_01(request):
-    context = {}
-    return render(request, 'blog/tech-category-01.html', context)
-
-
 def blog_category_02(request):
     context = {}
     return render(request, 'blog/tech-category-02.html', context)
-
-
-def blog_category_03(request):
-    context = {}
-    return render(request, 'blog/tech-category-03.html', context)
 
 
 # Contact us

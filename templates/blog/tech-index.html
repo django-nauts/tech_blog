@@ -10,7 +10,7 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-orange"><a href="{% url 'blog_category_01' %}" title="">Technology</a></span>
+                                        <span class="bg-orange"><a href="{% url 'blog_category_02' %}" title="">Technology</a></span>
                                         <h4><a href="tech-single.html" title="">Say hello to real handmade office furniture! Clean & beautiful design</a></h4>
                                         <small><a href="tech-single.html" title="">24 July, 2017</a></small>
                                         <small><a href="{% url 'blog_author' %}" title="">by Amanda</a></small>
@@ -27,7 +27,7 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-orange"><a href="{% url 'blog_category_01' %}" title="">Gadgets</a></span>
+                                        <span class="bg-orange"><a href="{% url 'blog_category_02' %}" title="">Gadgets</a></span>
                                         <h4><a href="tech-single.html" title="">Do not make mistakes when choosing web hosting</a></h4>
                                         <small><a href="tech-single.html" title="">03 July, 2017</a></small>
                                         <small><a href="{% url 'blog_author' %}" title="">by Jessica</a></small>
@@ -43,7 +43,7 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-orange"><a href="{% url 'blog_category_01' %}" title="">Technology</a></span>
+                                        <span class="bg-orange"><a href="{% url 'blog_category_02' %}" title="">Technology</a></span>
                                         <h4><a href="tech-single.html" title="">The most reliable Galaxy Note 8 images leaked</a></h4>
                                         <small><a href="tech-single.html" title="">01 July, 2017</a></small>
                                         <small><a href="{% url 'blog_author' %}" title="">by Jessica</a></small>
@@ -80,7 +80,7 @@
 
                                     <div class="blog-meta big-meta col-md-8">
                                         <h4><a href="{{ post.get_absolute_url }}" title="">{{ post.title }}</a></h4>
-                                        <p>{{ post.body | slice:"200" }}...</p>
+                                        <p>{{ post.body | slice:"300" }}...</p>
 										{% for category in post.categories.all %}
                                         <small class="firstsmall"><a class="bg-orange" href="{% url 'blog_category' category.name %}" title="">{{ category }}</a></small>
 										{% endfor %}
