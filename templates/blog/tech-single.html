@@ -14,7 +14,7 @@
                                 </ol>
 
 								{% for category in post.categories.all %}
-                                <span class="color-orange"><a href="{% url 'blog_category_02' %}" title="">{{ category }}</a></span>
+                                <span class="color-orange"><a href="{% url 'blog_category' category.name %}" title="">{{ category }}</a></span>
 								{% endfor %}
 
                                 <h3>{{ post.title }}</h3>
@@ -31,6 +31,8 @@
                                         <li><a href="#" class="tw-button btn btn-primary"><i class="fa fa-twitter"></i> <span class="down-mobile">Tweet on Twitter</span></a></li>
                                         <li><a href="#" class="gp-button btn btn-primary"><i class="fa fa-google-plus"></i></a></li>
                                     </ul>
+								<a href="{% url 'blog_update' post.slug %}"><img src="{% static 'images/edit.png' %}" alt="edit icon"></a>
+								<a href="{% url 'blog_delete' post.slug %}"><img src="{% static 'images/delete.png' %}" alt="delete icon"></a>
                                 </div><!-- end post-sharing -->
                             </div><!-- end title -->
 
