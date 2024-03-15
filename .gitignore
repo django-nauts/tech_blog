@@ -5,10 +5,9 @@ manage.py
 pyvenv.cfg
 __init__.py
 __pycache__
+.idea
+venv
 
 # images
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.webp
+media/
+

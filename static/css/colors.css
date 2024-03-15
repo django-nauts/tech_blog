@@ -7,7 +7,8 @@
 
 **************************************/
 
-/* COLORS  old color: 3197d6
+
+/* COLORS 
 **************************************/
 
 .authorbox p a,
@@ -23,7 +24,7 @@ a:focus,
 .navbar-inverse .navbar-nav .nav-link.active,
 .navbar-inverse .navbar-nav .nav-link.open,
 .navbar-inverse .navbar-nav .open > .nav-link {
-    color: #F6F4F4FF !important;
+    color: #3197d6 !important;
 }
 
 .dmtop,
@@ -31,7 +32,7 @@ a:focus,
 .search-form .btn:focus,
 .search-form .btn {
     color: #ffffff !important;
-    background-color: #F6F4F4FF !important;
+    background-color: #3197d6 !important;
 }
 
 .tag-cloud-single span,
@@ -41,15 +42,15 @@ a:focus,
 .btn:focus,
 .navbar-inverse .navbar-toggler {
     color: #ffffff !important;
-    background-color: #F6F4F4FF;
+    background-color: #3197d6;
 }
 
 .blockquote {
-    border-left-color: #F6F4F4FF;
+    border-left-color: #3197d6;
 }
 
 .footer .widget-title {
-    border-color: #F6F4F4FF;
+    border-color: #3197d6;
 }
 
 
