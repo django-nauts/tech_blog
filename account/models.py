@@ -16,6 +16,7 @@ class User(AbstractUser):
         OTHER = 'O', 'Other'
 
     is_author = models.BooleanField(default=False)
+    avatar=models.ImageField(upload_to='profile-image', null='True', blank='True')
     cellphone_numer = models.CharField(max_length=30, unique=True, null=True, blank=True)
     email_active_code = models.CharField(max_length=150, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=Gender.choices, null=True, blank=True)
