@@ -5,6 +5,8 @@ manage.py
 pyvenv.cfg
 __init__.py
 __pycache__
+.idea
+venv
 
 # images
 *.jpg
@@ -12,3 +14,7 @@ __pycache__
 *.png
 *.gif
 *.webp
+
+# ignore all images except static and staticfiles folder images
+!static/
+!staticfiles/
