@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericRelation
+from comment.models import Comment
+
 from account.models import User
 
 
@@ -31,6 +34,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(blank=False, null=False, unique=True)
     body = models.TextField(blank=False, null=False)
+    comments = GenericRelation(Comment)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

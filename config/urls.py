@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('', include('blog.urls')),
 	path('account/', include('account.urls')),
+	path('comment/', include('comment.urls')),
 ]
 
 if settings.DEBUG:

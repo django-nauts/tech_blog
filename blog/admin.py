@@ -16,4 +16,5 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
 
+
 admin.site.register(Category, CategoryAdmin)
