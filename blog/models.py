@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation
 from comment.models import Comment
+from taggit.managers import TaggableManager
 
 from account.models import User
 
@@ -11,16 +12,6 @@ from account.models import User
 class PostPublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=30)
-
-    class Meta:
-        verbose_name_plural = 'categories'
-
-    def __str__(self):
-        return self.name
 
 
 class Post(models.Model):
@@ -43,7 +34,7 @@ class Post(models.Model):
                              default=Status.DRAFT)
     objects = models.Manager() #The default manager
     published_posts = PostPublishedManager() #The custom manager
-    categories = models.ManyToManyField('Category', related_name='posts')
+    tags = TaggableManager()
 
     class Meta:
         ordering = ['-publish']

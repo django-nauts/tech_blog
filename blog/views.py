@@ -7,9 +7,9 @@ from blog.forms import PostForm, UpdatePostForm
 
 
 # Show specific category
-def blog_category(request, category):
+def blog_category(request, tag):
     posts = Post.objects.filter(
-        categories__name__contains=category
+        tags__name__contains=tag
     ).order_by('-created')
 
     paginator = Paginator(posts, 10)
@@ -17,7 +17,7 @@ def blog_category(request, category):
     page_obj = paginator.get_page(page_number)
     
     context = {
-        'category': category,
+        'tag': tag,
         'posts': posts,
 		'page_obj': page_obj,
     }
