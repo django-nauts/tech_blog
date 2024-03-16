@@ -29,7 +29,7 @@ class Post(models.Model):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_articles')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_articles', blank=True, null=True)
     cover = models.ImageField(upload_to='images/', default='default.jpg')
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(blank=False, null=False, unique=True)

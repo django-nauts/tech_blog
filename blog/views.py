@@ -15,27 +15,28 @@ def blog_category(request, category):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    
+
     context = {
         'category': category,
         'posts': posts,
-		'page_obj': page_obj,
+        'page_obj': page_obj,
     }
     return render(request, 'blog/tech-category.html', context)
 
 
 # Create a new post
 def blog_create(request):
-
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.author = request.user
+            obj.save()
             return redirect('blog_index')
     else:
         form = PostForm()
-        
+
     context = {
         'form': form,
     }
@@ -44,7 +45,6 @@ def blog_create(request):
 
 # Home page
 def blog_index(request):
-
     if request.method == 'GET':
         posts = Post.published_posts.all().order_by('-created')
         paginator = Paginator(posts, 10)
@@ -74,11 +74,13 @@ def blog_update(request, slug):
     if request.method == 'POST':
         form = UpdatePostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.author = request.user
+            obj.save()
             return redirect('blog_index')
     else:
         form = UpdatePostForm(instance=post)
-    
+
     context = {
         'post': post,
         'form': form,
