@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from blog.models import Post
 from blog.forms import PostForm, UpdatePostForm
@@ -14,7 +14,16 @@ def blog_category(request, tag):
 
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+
+    # Display the last result instead of non-existing page.
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    # Display the first page in the page number is a character.
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
 
     context = {
         'tag': tag,
@@ -50,7 +59,17 @@ def blog_index(request):
         paginator = Paginator(posts, 10)
 
         page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+
+        # Display the last result instead of non-existing page.
+        try:
+            page_obj = paginator.get_page(page_number)
+        except EmptyPage:
+            page_obj = paginator.get_page(paginator.num_pages)
+
+        # Display the first page in the page number is a character.
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+            
         context = {
             'posts': posts,
             'page_obj': page_obj,
