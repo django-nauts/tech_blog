@@ -1,9 +1,5 @@
 from django.contrib import admin
-from blog.models import Category, Post
-
-
-class CategoryAdmin(admin.ModelAdmin):
-	pass
+from blog.models import Post
 
 
 @admin.register(Post)
@@ -15,6 +11,3 @@ class PostAdmin(admin.ModelAdmin):
     raw_id_fields = ['author']
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
-
-
-admin.site.register(Category, CategoryAdmin)

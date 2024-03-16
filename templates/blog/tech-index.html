@@ -81,9 +81,6 @@
                                     <div class="blog-meta big-meta col-md-8">
                                         <h4><a href="{{ post.get_absolute_url }}" title="">{{ post.title }}</a></h4>
                                         <p>{{ post.body | slice:"300" }}...</p>
-										{% for category in post.categories.all %}
-                                        <small class="firstsmall"><a class="bg-orange" href="{% url 'blog_category' category.name %}" title="">{{ category }}</a></small>
-										{% endfor %}
                                         <small><a href="{{ post.get_absolute_url }}" title="">{{ post.created.date }}</a></small>
                                         <small><a href="{% url 'blog_author' %}" title="">by Matilda</a></small>
                                         <small><a href="{{ post.get_absolute_url }}" title=""><i class="fa fa-eye"></i> 1114</a></small>

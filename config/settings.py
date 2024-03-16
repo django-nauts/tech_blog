@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # External/Third party apps
     'whitenoise.runserver_nostatic',
 	'comment.apps.CommentConfig',
+	'taggit',
 ]
 
 MIDDLEWARE = [
@@ -196,3 +197,6 @@ TIME_DAYS = 3  # less will use type 2 , more will use type 3
 THEME_DIRECTION = 'ltr'  # ltr / rtl
 # set True for dark mode
 THEME_DARK_MODE = False
+
+# taggit to be case-insensitive
+TAGGIT_CASE_INSENSITIVE = True
