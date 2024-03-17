@@ -1,0 +1,49 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Site Metas -->
+    <title>Tech Blog</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% include 'shared/header_ref.html' %}
+
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    {#{% render_partial 'app_home.views.header_component' %}#}
+    {% include "../templates/shared/header_component.html" %}
+
+    {% block content %}
+    {% endblock content %}
+
+
+    {% include 'shared/footer_ref.html' %}
+    {% include 'shared/footer_component' %}
+
+</div><!-- end wrapper -->
+
+
+{% block footer %}
+
+{% endblock footer %}
+
+
+</body>
+
+</html>

@@ -134,3 +134,9 @@ def blog_category_02(request):
 def blog_contact(request):
     context = {}
     return render(request, 'blog/tech-contact.html', context)
+
+def footer_component(request):
+    return render(request, 'shared/footer_component.html')
+
+def header_component(request):
+    return render(request, 'shared/header_component.html')

@@ -1,0 +1,10 @@
+{% load static %}
+
+
+{% if messages %}
+    {% for msg in messages %}
+        <p class="alert alert-{{ messagage }}>
+        {{ msg }}
+        </p>
+        {% endfor %}
+{% endif %}

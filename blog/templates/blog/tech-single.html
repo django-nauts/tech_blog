@@ -1,6 +1,9 @@
+{% extends 'base.html' %}
 {% load static %}
 {% load comment_tags %}
-{% include 'header.html' %}
+
+
+{% block content %}
 
         <section class="section single-wrapper">
             <div class="container">
@@ -389,7 +392,4 @@
             </div><!-- end container -->
         </section>
 
-{% include 'footer.html' %}
-
-</body>
-</html>
+{% endblock %}

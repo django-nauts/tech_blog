@@ -1,5 +1,8 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'header.html' %}
+
+
+{% block content %}
 
 <section class="section">
   <div class="container">
@@ -9,11 +12,11 @@
 	{% csrf_token %}
 	{{ form.as_p }}
 
-	<button type="submit" value="Create">Create</button>
+	<button type="submit" value="Update">Update</button>
   </form>
 </div>
 
   </div>
 </section>
 
-{% include 'footer.html' %}
+{% endblock %}

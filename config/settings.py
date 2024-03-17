@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
 	'comment.apps.CommentConfig',
 	'taggit',
+    'django_render_partial',
 ]
 
 MIDDLEWARE = [
