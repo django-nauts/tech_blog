@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.db.models import Count
+
 from blog.models import Post
 from blog.forms import PostForm, UpdatePostForm
 
@@ -80,8 +82,15 @@ def blog_index(request):
 # Show each post
 def blog_detail(request, slug):
     post = Post.objects.get(slug=slug)
+
+	# Show similar posts
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published_posts.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-publish')[:2]   
+    
     context = {
         'post': post,
+        'similar_posts': similar_posts,
     }
     return render(request, 'blog/tech-single.html', context)
 
