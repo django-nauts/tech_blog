@@ -200,3 +200,11 @@ THEME_DARK_MODE = False
 
 # taggit to be case-insensitive
 TAGGIT_CASE_INSENSITIVE = True
+
+# Email service: For sending email to clint by Gmail (we can change it)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'YYYYYYY@gmail.com'
+EMAIL_HOST_PASSWORD = 'YYYYYYYYYYYYYYY'
+EMAIL_PORT = 587
