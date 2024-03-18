@@ -42,9 +42,15 @@ INSTALLED_APPS = [
 
     # External/Third party apps
     'whitenoise.runserver_nostatic',
-	'comment.apps.CommentConfig',
-	'taggit',
+    'comment.apps.CommentConfig',
+    'taggit',
     'django_render_partial',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+
 ]
 
 MIDDLEWARE = [
@@ -58,6 +64,7 @@ MIDDLEWARE = [
     # External/Third party middlewares
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -209,3 +216,39 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'YYYYYYY@gmail.com'
 EMAIL_HOST_PASSWORD = 'YYYYYYYYYYYYYYY'
 EMAIL_PORT = 587
+
+# Prioritize of how we sign in
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# With what website's account the client is able to signin in our website
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    },
+    'google': {
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
+
+#Below 4 lines are added so our website work properly with allauth library(usually use with some other libraries too)
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = ""
+ACCOUNT_LOGOUT_ON_GET = True
