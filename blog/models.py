@@ -5,8 +5,7 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation
 from comment.models import Comment
 from taggit.managers import TaggableManager
-
-from account.models import User
+from app_account.models import User
 
 
 class PostPublishedManager(models.Manager):

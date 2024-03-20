@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-
+{% load socialaccount %}
 
 {% block content %}
 
@@ -20,7 +19,7 @@
                     <button type="submit" class=" mx-auto btn btn-light  shadow"> submit</button>
                     <br>
                 </form>
-                
+
                 <div class="social">
                     <i class="bi bi-github"></i><i class="bi bi-github"></i><i class="bi bi-github"></i><i
                         class="bi bi-github"></i>
@@ -29,10 +28,10 @@
                     <a href="#" data-toggle="tooltip" data-placement="bottom" title="Twitter"><i
                             class="fa fa-twitter"></i></a>
                     <a href="{% provider_login_url 'github' %}" data-toggle="tooltip" data-placement="bottom"
-                       title="Github"><i class="fa fa-github"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="Github"><i
+                       title="Github"><i
                             class="fa fa-github"></i></a>
-                    <a href="{% provider_login_url 'github' %}" data-toggle="tooltip" data-placement="bottom" title="Google Plus"><i
+                    <a href="{% provider_login_url 'google' %}" data-toggle="tooltip" data-placement="bottom"
+                       title="Google Plus"><i
                             class="fa fa-google-plus"></i></a>
                     <a href="#" data-toggle="tooltip" data-placement="bottom" title="Pinterest"><i
                             class="fa fa-pinterest"></i></a>

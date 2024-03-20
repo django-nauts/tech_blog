@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 
     # Internal Apps
     'blog.apps.BlogConfig',
-    'account.apps.AccountConfig',
+    'app_account.apps.AppAccountConfig',
 
     # External/Third party apps
     'whitenoise.runserver_nostatic',
@@ -46,11 +46,15 @@ INSTALLED_APPS = [
     'taggit',
     'django_render_partial',
     'allauth',
-    'allauth.account',
+    'allauth.account', # None of applications should be named "account" otherwise we face a problem
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.twitter_oauth2',
+    'allauth.socialaccount.providers.linkedin_oauth2',
+    'allauth.socialaccount.providers.instagram',
 ]
 
 MIDDLEWARE = [
@@ -150,7 +154,7 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Defining default User Model
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'app_account.User'
 
 # Global settings of comment system
 COMMENT_SETTINGS = {
@@ -219,36 +223,41 @@ EMAIL_PORT = 587
 
 # Prioritize of how we sign in
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'app_account.authentication.UsernameAuthBackend', #todo : how to sign in with username instead of email?
+
+    'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # With what website's account the client is able to signin in our website
+#Customize "client ID" and "secret" should be added for each social account
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         # For each OAuth based provider, either add a ``SocialApp``
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '123',
-            'secret': '456',
+            'client_id': '',
+            'secret': '',
             'key': ''
         }
     },
     'google': {
         'APP': {
-            'client_id': '123',
-            'secret': '456',
+            'client_id': '',
+            'secret': '',
             'key': ''
         }
-    }
+    },
 }
 
-#Below 4 lines are added so our website work properly with allauth library(usually use with some other libraries too)
+# Below 4 lines are added so our website work properly with allauth library(usually use with some other libraries too)
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = ""
+LOGIN_REDIRECT_URL = "blog_index"
 ACCOUNT_LOGOUT_ON_GET = True
+# LOGOUT_REDIRECT_URL = "blog_index"
+# # ACCOUNT_LOGOUT_REDIRECT_URL = 'app_account/login/'
