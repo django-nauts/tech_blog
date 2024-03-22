@@ -12,4 +12,5 @@ urlpatterns = [
 	path('category_02/', views.blog_category_02, name='blog_category_02'),
 	path('author/', views.blog_author, name='blog_author'),
 	path('contact/', views.blog_contact, name='blog_contact'),
+	path('like-post/',views.like_post, name='like_post'),
 ]

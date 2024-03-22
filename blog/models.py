@@ -14,7 +14,6 @@ class PostPublishedManager(models.Manager):
 
 
 class Post(models.Model):
-
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
@@ -29,11 +28,17 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2,
-                             choices=Status.choices,
-                             default=Status.DRAFT)
-    objects = models.Manager() #The default manager
-    published_posts = PostPublishedManager() #The custom manager
+                              choices=Status.choices,
+                              default=Status.DRAFT)
+    likes = models.ManyToManyField(User, related_name='like', default=None, blank=True)
+    likes_count = models.BigIntegerField(default='0')
+    likes_plurality = models.CharField(max_length=10, blank=False, null=False, default='like')
+    user_like = models.BooleanField(blank=True, default=False)
+
+    objects = models.Manager()  # The default manager
+    published_posts = PostPublishedManager()  # The custom manager
     tags = TaggableManager()
+
 
     class Meta:
         ordering = ['-publish']
@@ -41,11 +46,14 @@ class Post(models.Model):
             models.Index(fields=['-publish']),
         ]
 
+
     def __str__(self):
         return self.title
 
+
     def get_absolute_url(self):
         return reverse("blog_detail", kwargs={'slug': self.slug})
+
 
     def save(self, *args, **kwargs):
         if not self.slug:

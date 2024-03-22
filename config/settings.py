@@ -65,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 
+    # Internal Middleware
+
     # External/Third party middlewares
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -225,7 +227,7 @@ EMAIL_PORT = 587
 AUTHENTICATION_BACKENDS = [
 
     # Needed to login by username in Django admin, regardless of `allauth`
-    'app_account.authentication.UsernameAuthBackend', #todo : how to sign in with username instead of email?
+    # 'app_account.authentication.UsernameAuthBackend', #todo : how to sign in with username instead of email?
 
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by email
