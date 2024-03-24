@@ -148,8 +148,9 @@ def blog_contact(request):
 def like_post(request):
     if request.POST.get('action') == 'post':
         current_like_count = ''
-        current_user_like = False
+        current_user_like = 'False'
         current_like_plurality = ''
+        current_bootstrap_class = "fa fa-heart-o"
         post_id = int(request.POST.get('postid'))
         post = get_object_or_404(Post, id=post_id)
 
@@ -175,6 +176,8 @@ def like_post(request):
             else:
                 post.likes_plurality = 'like'
                 current_like_plurality = post.likes_plurality
+            post.bootstrap_class_name = "fa fa-heart"
+            current_bootstrap_class = post.bootstrap_class_name
             post.user_like = True
             current_user_like = post.user_like
             post.save()
@@ -182,11 +185,13 @@ def like_post(request):
         print(current_like_count)
         print(current_like_plurality)
         print(current_user_like)
+        print(current_bootstrap_class)
 
         return JsonResponse({
             'like_count': current_like_count,
             'user_like': current_user_like,
             'like_plurality': current_like_plurality,
+            'current_bootstrap_class': current_bootstrap_class,
         })
 
 

@@ -17,6 +17,7 @@ class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
+        WITHDRAWN = 'W', 'Withdrawn'
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_articles', blank=True, null=True)
     cover = models.ImageField(upload_to='images/', default='default.jpg')
@@ -34,6 +35,8 @@ class Post(models.Model):
     likes_count = models.BigIntegerField(default='0')
     likes_plurality = models.CharField(max_length=10, blank=False, null=False, default='like')
     user_like = models.BooleanField(blank=True, default=False)
+    bootstrap_class_name = models.CharField(max_length=20, blank=True, default="fa fa-heart-o")
+
 
     objects = models.Manager()  # The default manager
     published_posts = PostPublishedManager()  # The custom manager
