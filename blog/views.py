@@ -156,7 +156,7 @@ def like_post(request):
 
         if post.likes.filter(id=request.user.id).exists():
             post.likes.remove(request.user)
-            post.likes_count -= 1  # because the type of field is BigIntegerfield, its not necessary to check the number not to be less than zero
+            post.likes_count -= 1
             current_like_count = post.likes_count
             if current_like_count > 1:
                 post.likes_plurality = 'likes'
@@ -201,3 +201,12 @@ def footer_component(request):
 
 def header_component(request):
     return render(request, 'shared/header_component.html')
+
+
+def sidebar_component(request):
+    # Sorting posts based on which ones have a more likes by clients
+    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:4]
+    context = {
+        'favorite_posts': favorite_posts,
+    }
+    return render(request, 'shared/sidebar_component.html', context)

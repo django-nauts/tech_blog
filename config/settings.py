@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter_oauth2',
     'allauth.socialaccount.providers.linkedin_oauth2',
     'allauth.socialaccount.providers.instagram',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,8 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -263,3 +266,8 @@ LOGIN_REDIRECT_URL = "blog_index"
 ACCOUNT_LOGOUT_ON_GET = True
 # LOGOUT_REDIRECT_URL = "blog_index"
 # # ACCOUNT_LOGOUT_REDIRECT_URL = 'app_account/login/'
+
+# Below codes because of Django Debug Toolbar are added
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
