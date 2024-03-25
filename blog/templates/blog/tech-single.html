@@ -114,36 +114,40 @@
                                 <div class="col-lg-6">
                                     <div class="blog-list-widget">
                                         <div class="list-group">
-                                            <a href="tech-single.html"
+										  {% if previous_post %}
+                                            <a href="{{ previous_post.get_absolute_url }}"
+										  
                                                class="list-group-item list-group-item-action flex-column align-items-start">
                                                 <div class="w-100 justify-content-between text-right">
-                                                    <img src="{% static 'upload/tech_menu_19.jpg' %}" alt=""
+                                                    <img src="{{ previous_post.cover.url }}" alt=""
                                                          class="img-fluid float-right">
-                                                    <h5 class="mb-1">5 Beautiful buildings you need to before dying</h5>
+                                                    <h5 class="mb-1">{{ previous_post.title }}</h5>
                                                     <small>Prev Post</small>
-                                                </div>
+                                                </div>												
                                             </a>
                                         </div>
+										{% endif %}
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col-lg-6">
                                     <div class="blog-list-widget">
-                                        <div class="list-group">
-                                            <a href="tech-single.html"
+									  {% if next_post %}
+                                        <div class="list-group">										  
+                                            <a href="{{ next_post.get_absolute_url }}"										  
                                                class="list-group-item list-group-item-action flex-column align-items-start">
                                                 <div class="w-100 justify-content-between">
-                                                    <img src="{% static 'upload/tech_menu_20.jpg' %}" alt=""
+                                                    <img src="{{ next_post.cover.url }}" alt=""
                                                          class="img-fluid float-left">
-                                                    <h5 class="mb-1">Let's make an introduction to the glorious world of
-                                                        history</h5>
+                                                    <h5 class="mb-1">{{ next_post.title }}2</h5>
                                                     <small>Next Post</small>
                                                 </div>
                                             </a>
                                         </div>
+										{% endif %}
                                     </div>
                                 </div><!-- end col -->
-                            </div><!-- end row -->
+                            </div><!-- end row --> 
                         </div><!-- end author-box -->
 
                         <hr class="invis1">

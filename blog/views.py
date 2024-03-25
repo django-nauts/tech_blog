@@ -87,9 +87,15 @@ def blog_detail(request, slug):
     similar_posts = Post.published_posts.filter(tags__in=post_tags_ids).exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:2]
 
+    # Get the previous and next posts based on the publish date
+    previous_post = Post.objects.filter(publish__lt=post.publish).order_by('-publish').first()
+    next_post = Post.objects.filter(publish__gt=post.publish).order_by('publish').first()
+
     context = {
         'post': post,
         'similar_posts': similar_posts,
+        'previous_post': previous_post,
+        'next_post': next_post,
     }
     return render(request, 'blog/tech-single.html', context)
 
