@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.urls import reverse
+
 
 
 PERCENTAGE_VALIDATOR = [MinValueValidator(0), MaxValueValidator(100)]
@@ -17,11 +19,13 @@ class User(AbstractUser):
 
     is_author = models.BooleanField(default=False)
     avatar=models.ImageField(upload_to='profile-image', null='True', blank='True')
-    cellphone_numer = models.CharField(max_length=30, unique=True, null=True, blank=True)
+    cellphone_number = models.CharField(max_length=30, unique=True, null=True, blank=True)
     email_active_code = models.CharField(max_length=150, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=Gender.choices, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     vip_due_date = models.DateTimeField(default=timezone.now)
+    biography= models.TextField(null=True, blank=True)
+    address = models.CharField(max_length=500, null=True, blank=True)
     # programming_skill = models.ManyToManyField('ProgrammingSkills', null=True, blank=True)
     # language_skill = models.ManyToManyField('LanguageSkill', null=True, blank=True)
 
@@ -30,6 +34,11 @@ class User(AbstractUser):
             return True
         else:
             return False
+
+    # def get_absolute_url(self):
+    #     return reverse("account:user_dashboard_page", args=[str(self.id)])
+
+
 
     # instead of showing False/True in admin panel, Tick or Cross shapes will be displayed
     is_vip_due_date.boolean = True

@@ -1,12 +1,15 @@
 from django.contrib.auth import login, logout
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 
 from utils.email_service import send_email_to_user
-from .forms import LoginForm, RegisterForm, ForgetPasswordForm, ResetPasswordForm
+from .forms import LoginForm, RegisterForm, ForgetPasswordForm, ResetPasswordForm, EditProfileModelForm, \
+    ChangePasswordForm
 from .models import User
+from blog.models import Post
 
 
 # Login View
@@ -153,3 +156,82 @@ def reset_password(request, email_active_code):
         }
 
         return render(request, 'app_account/reset_password.html', context)
+
+
+def user_dashboard(request, pk):
+    user_page = User.objects.get(id=pk)
+    posts = Post.objects.filter(author=user_page).order_by('-created')
+    paginator = Paginator(posts, 1)
+    page_number = request.GET.get("page")
+
+    # Display the last result instead of non-existing page.
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    # Display the first page in the page number is a character.
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+
+    context = {
+        'user_page': user_page,
+        'posts': posts,
+        'page_obj': page_obj,
+    }
+    return render(request, 'app_account/user_dashboard.html', context)
+
+
+def user_dashboard_sidebar_component(request):
+    return render(request, 'app_account/component/user_dashboard_sidebar.html')
+
+
+#
+def user_edit_profile(request):
+    current_user = User.objects.filter(id=request.user.id).first()
+
+    if request.method == 'GET':
+        edit_profile_form = EditProfileModelForm(instance=current_user)
+        context = {
+            'edit_profile_form': edit_profile_form,
+            'current_user': current_user,
+        }
+        return render(request, 'app_account/user_edit_profile.html', context)
+
+    if request.method == 'POST':
+        edit_profile_form = EditProfileModelForm(data=request.POST, instance=current_user, files=request.FILES)
+        if edit_profile_form.is_valid():
+            edit_profile_form.save()
+        context = {
+            'edit_profile_form': edit_profile_form,
+            'current_user': current_user,
+        }
+        return render(request, 'app_account/user_edit_profile.html', context)
+
+
+def user_change_password(request):
+    if request.method == 'GET':
+        current_user: User = User.objects.filter(id=request.user.id).first()
+        change_pass_form = ChangePasswordForm()
+        context = {
+            'change_pass_form': change_pass_form,
+            'current_user': current_user,
+        }
+        return render(request, 'app_account/user_change_password.html', context)
+
+    if request.method == 'POST':
+        change_pass_form = ChangePasswordForm(request.POST)
+        if change_pass_form.is_valid():
+            current_user: User = User.objects.filter(id=request.user.id).first()
+            if current_user.check_password(change_pass_form.cleaned_data.get('current_password')):
+                current_user.set_password(change_pass_form.cleaned_data.get('new_password'))
+                current_user.save()
+                logout(request)
+                return redirect('account:login_page')
+            else:
+                change_pass_form.add_error('current_password', 'Your password is wrong')
+
+        context = {
+            'change_pass_form': change_pass_form,
+        }
+        return render(request, 'app_account/user_change_password.html', context)

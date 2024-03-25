@@ -22,7 +22,12 @@
 
                             <div class="blog-meta big-meta">
                                 <small><a href="tech-single.html" title="">{{ post.created.date }}</a></small>
-                                <small><a href="{% url 'blog_author' %}" title="">by Jessica</a></small>
+                                <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by
+                                    {% if post.author.fullname %}
+                                        {{ post.author.fullname }}
+                                    {% else %}
+                                        {{ post.author.email }}
+                                    {% endif %}</a></small>
                                 <small><a href="#" title=""><i class="fa fa-eye"></i> 2344</a></small>
                             </div><!-- end meta -->
 
@@ -100,16 +105,7 @@
                                 </ul>
                             </div><!-- end post-sharing -->
                         </div><!-- end title -->
-
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="banner-spot clearfix">
-                                    <div class="banner-img">
-                                        <img src="{% static 'upload/banner_01.jpg' %}" alt="" class="img-fluid">
-                                    </div><!-- end banner-img -->
-                                </div><!-- end banner -->
-                            </div><!-- end col -->
-                        </div><!-- end row -->
+                    
 
                         <hr class="invis1">
 
@@ -156,15 +152,12 @@
                             <h4 class="small-title">About author</h4>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                    <img src="{% static 'upload/author.jpg' %}" alt="" class="img-fluid rounded-circle">
+                                    <img src="{{ post.author.avatar.url }}" alt="" class="img-fluid rounded-circle">
                                 </div><!-- end col -->
 
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                                    <h4><a href="#">Jessica</a></h4>
-                                    <p>Quisque sed tristique felis. Lorem <a href="#">visit my website</a> amet,
-                                        consectetur adipiscing elit. Phasellus quis mi auctor, tincidunt nisl eget,
-                                        finibus odio. Duis tempus elit quis risus congue feugiat. Thanks for stop Tech
-                                        Blog!</p>
+                                    <h4><a href="{% url 'account:user_dashboard_page' post.author.id %}">{{ post.author }}</a></h4>
+                                    <p>{{ post.author.biography }}</p>
 
                                     <div class="topsocial">
                                         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Facebook"><i
@@ -206,7 +199,12 @@
                                                 </h4>
                                                 <small><a href="{{ post.get_absolute_url }}"
                                                           title="">{{ post.created.date }}</a></small>
-                                                <small><a href="{% url 'blog_author' %}" title="">by Matilda</a></small>
+{#                                                <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by#}
+{#                                                    {% if post.author.fullname %}#}
+{#                                                        {{ post.author.fullname }}#}
+{#                                                    {% else %}#}
+{#                                                        {{ post.author.email }}#}
+{#                                                    {% endif %}</a></small>#}
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
                                     </div><!-- end col -->

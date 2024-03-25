@@ -19,7 +19,7 @@
                                     <h4><a href="tech-single.html" title="">Say hello to real handmade office furniture!
                                         Clean & beautiful design</a></h4>
                                     <small><a href="tech-single.html" title="">24 July, 2017</a></small>
-                                    <small><a href="{% url 'blog_author' %}" title="">by Amanda</a></small>
+                                    <small><a href="{{ request.user.get_absolute_url }}" title="">by Amanda</a></small>
                                 </div><!-- end meta -->
                             </div><!-- end shadow-desc -->
                         </div><!-- end shadow -->
@@ -37,7 +37,6 @@
                                     <h4><a href="tech-single.html" title="">Do not make mistakes when choosing web
                                         hosting</a></h4>
                                     <small><a href="tech-single.html" title="">03 July, 2017</a></small>
-                                    <small><a href="{% url 'blog_author' %}" title="">by Jessica</a></small>
                                 </div><!-- end meta -->
                             </div><!-- end shadow-desc -->
                         </div><!-- end shadow -->
@@ -55,7 +54,7 @@
                                     <h4><a href="tech-single.html" title="">The most reliable Galaxy Note 8 images
                                         leaked</a></h4>
                                     <small><a href="tech-single.html" title="">01 July, 2017</a></small>
-                                    <small><a href="{% url 'blog_author' %}" title="">by Jessica</a></small>
+                                    <small><a href="" title="">by </a></small>
                                 </div><!-- end meta -->
                             </div><!-- end shadow-desc -->
                         </div><!-- end shadow -->
@@ -77,6 +76,7 @@
 
                         <div class="blog-list clearfix">
                             <div class="blog-box row">
+
                                 {% for post in page_obj %}
                                     <div class="col-md-4">
                                         <div class="post-media">
@@ -94,14 +94,23 @@
                                         <p>{{ post.body | slice:"300" }}...</p>
                                         <small><a href="{{ post.get_absolute_url }}"
                                                   title="">{{ post.created.date }}</a></small>
-                                        <small><a href="{% url 'blog_author' %}" title="">by Matilda</a></small>
+                                        <small><a href="">by
+                                            {% if post.author.fullname %}
+                                                {{ post.author.fullname }}
+                                            {% else %}
+                                                {{ post.author.email }}
+                                            {% endif %}
+                                        </a></small>
                                         <small><a href="{{ post.get_absolute_url }}" title=""><i class="fa fa-eye"></i>
                                             1114</a></small>
                                         <br>
-                                        <a href="{% url 'blog_update' post.slug %}"><img
-                                                src="{% static 'images/edit.png' %}" alt="edit icon"></a>
-                                        <a href="{% url 'blog_delete' post.slug %}"><img
-                                                src="{% static 'images/delete.png' %}" alt="delete icon"></a>
+                                        {% if post.author.id == request.user.id %}
+
+                                            <a href="{% url 'blog_update' post.slug %}"><img
+                                                    src="{% static 'images/edit.png' %}" alt="edit icon"></a>
+                                            <a href="{% url 'blog_delete' post.slug %}"><img
+                                                    src="{% static 'images/delete.png' %}" alt="delete icon"></a>
+                                        {% endif %}
                                     </div><!-- end meta -->
                                     </div><!-- end blog-box -->
 
@@ -109,19 +118,12 @@
 
                                     <div class="blog-box row">
                                 {% endfor %}
+
                                 <div class="col-md-4">
 
                                 </div><!-- end col -->
 
-                                <div class="row">
-                                    <div class="col-lg-10 offset-lg-1">
-                                        <div class="banner-spot clearfix">
-                                            <div class="banner-img">
-                                                <img src="{% static 'upload/banner_02.jpg' %}" alt="" class="img-fluid">
-                                            </div><!-- end banner-img -->
-                                        </div><!-- end banner -->
-                                    </div><!-- end col -->
-                                </div><!-- end row -->
+
 
                                 <hr class="invis">
 
@@ -161,7 +163,7 @@
 
 
                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                    
+
                     {% render_partial 'blog.views.sidebar_component' %}
 
 

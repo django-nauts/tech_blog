@@ -127,12 +127,6 @@ def blog_delete(request, slug):
     return render(request, 'blog/delete.html', context)
 
 
-# Show author posts and information
-def blog_author(request):
-    context = {}
-    return render(request, 'blog/tech-author.html', context)
-
-
 def blog_category_02(request):
     context = {}
     return render(request, 'blog/tech-category-02.html', context)

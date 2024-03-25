@@ -1,0 +1,28 @@
+{% load static %}
+
+<div class="card" style="width: 18rem;">
+
+    <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk
+            of the card's content.</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <a href="{% url 'account:user_edit_profile_page' %}"> Edit profile information </a>
+        </li>
+    </ul>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <a href="{% url 'account:user_change_password_page' %}"> Change password </a>
+        </li>
+    </ul>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Saved posts</li>
+    </ul>
+
+    <div class="card-body">
+        <a href="#" class="card-link">Card link</a>
+    </div>
+
+</div>
