@@ -55,6 +55,9 @@ def blog_create(request):
 
 # Home page
 def blog_index(request):
+
+    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:2]
+	
     if request.method == 'GET':
         posts = Post.published_posts.all().order_by('-created')
         paginator = Paginator(posts, 10)
@@ -74,6 +77,7 @@ def blog_index(request):
         context = {
             'posts': posts,
             'page_obj': page_obj,
+			'favorite_posts': favorite_posts,
         }
         return render(request, 'blog/tech-index.html', context)
 
