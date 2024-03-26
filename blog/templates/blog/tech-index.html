@@ -102,7 +102,7 @@
                                             {% endif %}
                                         </a></small>
                                         <small><a href="{{ post.get_absolute_url }}" title=""><i class="fa fa-eye"></i>
-                                            1114</a></small>
+                                            {{ post.visit_count }}</a></small>
                                         <br>
                                         {% if post.author.id == request.user.id %}
 
