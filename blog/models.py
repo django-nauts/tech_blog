@@ -62,3 +62,13 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
+
+
+class PostVisit(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    ip_address = models.CharField(max_length=30, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.post.title} - {self.ip_address}'

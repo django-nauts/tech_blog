@@ -7,7 +7,7 @@ __init__.py
 __pycache__
 .idea
 venv
-migrations/
+/migrations/
 
 # images
 media/

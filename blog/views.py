@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 
-from blog.models import Post
+from blog.models import Post, PostVisit
 from blog.forms import PostForm, UpdatePostForm
+from utils.http_service import get_client_ip
 
 
 # Show specific category
@@ -59,7 +60,7 @@ def blog_index(request):
     favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:2]
 	
     if request.method == 'GET':
-        posts = Post.published_posts.all().order_by('-created')
+        posts = Post.published_posts.all().order_by('-created').annotate(visit_count=Count('postvisit__ip_address'))
         paginator = Paginator(posts, 10)
 
         page_number = request.GET.get("page")
@@ -84,7 +85,7 @@ def blog_index(request):
 
 # Show each post
 def blog_detail(request, slug):
-    post = Post.objects.get(slug=slug)
+    post = Post.objects.prefetch_related('postvisit_set').get(slug=slug)
 
     # Show similar posts
     post_tags_ids = post.tags.values_list('id', flat=True)
@@ -94,6 +95,16 @@ def blog_detail(request, slug):
     # Get the previous and next posts based on the publish date
     previous_post = Post.objects.filter(publish__lt=post.publish).order_by('-publish').first()
     next_post = Post.objects.filter(publish__gt=post.publish).order_by('publish').first()
+
+    # Get IP of each client and add it to db
+    user_ip = get_client_ip(request)
+    user_id=None
+    if request.user.is_authenticated:
+        user_id=request.user.id
+    is_visited=PostVisit.objects.filter(ip_address=user_ip).exists()
+    if not is_visited:
+        new_visit = PostVisit(post=post, ip_address=user_ip, user=request.user)
+        new_visit.save()
 
     context = {
         'post': post,

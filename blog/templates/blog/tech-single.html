@@ -81,7 +81,9 @@
 
                             </button>
 
+                            <span><i class="fa fa-eye">   {{ post.postvisit_set.count }} </i> </span>
                         </p>
+
 
                         <!-- end like section -->
 
@@ -105,7 +107,7 @@
                                 </ul>
                             </div><!-- end post-sharing -->
                         </div><!-- end title -->
-                    
+
 
                         <hr class="invis1">
 
@@ -114,40 +116,40 @@
                                 <div class="col-lg-6">
                                     <div class="blog-list-widget">
                                         <div class="list-group">
-										  {% if previous_post %}
-                                            <a href="{{ previous_post.get_absolute_url }}"
-										  
-                                               class="list-group-item list-group-item-action flex-column align-items-start">
-                                                <div class="w-100 justify-content-between text-right">
-                                                    <img src="{{ previous_post.cover.url }}" alt=""
-                                                         class="img-fluid float-right">
-                                                    <h5 class="mb-1">{{ previous_post.title }}</h5>
-                                                    <small>Prev Post</small>
-                                                </div>												
-                                            </a>
-                                        </div>
-										{% endif %}
+                                            {% if previous_post %}
+                                                <a href="{{ previous_post.get_absolute_url }}"
+
+                                                   class="list-group-item list-group-item-action flex-column align-items-start">
+                                                    <div class="w-100 justify-content-between text-right">
+                                                        <img src="{{ previous_post.cover.url }}" alt=""
+                                                             class="img-fluid float-right">
+                                                        <h5 class="mb-1">{{ previous_post.title }}</h5>
+                                                        <small>Prev Post</small>
+                                                    </div>
+                                                </a>
+                                                </div>
+                                            {% endif %}
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col-lg-6">
                                     <div class="blog-list-widget">
-									  {% if next_post %}
-                                        <div class="list-group">										  
-                                            <a href="{{ next_post.get_absolute_url }}"										  
-                                               class="list-group-item list-group-item-action flex-column align-items-start">
-                                                <div class="w-100 justify-content-between">
-                                                    <img src="{{ next_post.cover.url }}" alt=""
-                                                         class="img-fluid float-left">
-                                                    <h5 class="mb-1">{{ next_post.title }}2</h5>
-                                                    <small>Next Post</small>
-                                                </div>
-                                            </a>
-                                        </div>
-										{% endif %}
+                                        {% if next_post %}
+                                            <div class="list-group">
+                                                <a href="{{ next_post.get_absolute_url }}"
+                                                   class="list-group-item list-group-item-action flex-column align-items-start">
+                                                    <div class="w-100 justify-content-between">
+                                                        <img src="{{ next_post.cover.url }}" alt=""
+                                                             class="img-fluid float-left">
+                                                        <h5 class="mb-1">{{ next_post.title }}2</h5>
+                                                        <small>Next Post</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div><!-- end col -->
-                            </div><!-- end row --> 
+                            </div><!-- end row -->
                         </div><!-- end author-box -->
 
                         <hr class="invis1">
@@ -160,7 +162,9 @@
                                 </div><!-- end col -->
 
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                                    <h4><a href="{% url 'account:user_dashboard_page' post.author.id %}">{{ post.author }}</a></h4>
+                                    <h4>
+                                        <a href="{% url 'account:user_dashboard_page' post.author.id %}">{{ post.author }}</a>
+                                    </h4>
                                     <p>{{ post.author.biography }}</p>
 
                                     <div class="topsocial">
@@ -203,12 +207,12 @@
                                                 </h4>
                                                 <small><a href="{{ post.get_absolute_url }}"
                                                           title="">{{ post.created.date }}</a></small>
-{#                                                <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by#}
-{#                                                    {% if post.author.fullname %}#}
-{#                                                        {{ post.author.fullname }}#}
-{#                                                    {% else %}#}
-{#                                                        {{ post.author.email }}#}
-{#                                                    {% endif %}</a></small>#}
+                                                {#                                                <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by#}
+                                                {#                                                    {% if post.author.fullname %}#}
+                                                {#                                                        {{ post.author.fullname }}#}
+                                                {#                                                    {% else %}#}
+                                                {#                                                        {{ post.author.email }}#}
+                                                {#                                                    {% endif %}</a></small>#}
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
                                     </div><!-- end col -->
