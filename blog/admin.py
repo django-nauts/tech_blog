@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post, PostVisit
+from blog.models import Post, PostVisit, Comment
 
 
 @admin.action(description="Mark selected stories as published")
@@ -31,4 +31,9 @@ class PostAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, form, change)
 
 
+class CommentAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(PostVisit)
+admin.site.register(Comment, CommentAdmin)

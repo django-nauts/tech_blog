@@ -2,8 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from django.contrib.contenttypes.fields import GenericRelation
-from comment.models import Comment
 from taggit.managers import TaggableManager
 from app_account.models import User
 
@@ -24,13 +22,12 @@ class Post(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(blank=False, null=False, unique=True)
     body = models.TextField(blank=False, null=False)
-    comments = GenericRelation(Comment)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2,
                               choices=Status.choices,
-                              default=Status.DRAFT)
+                              default=Status.PUBLISHED)
     likes = models.ManyToManyField(User, related_name='like', default=None, blank=True)
     likes_count = models.BigIntegerField(default='0')
     likes_plurality = models.CharField(max_length=10, blank=False, null=False, default='like')
@@ -72,3 +69,13 @@ class PostVisit(models.Model):
 
     def __str__(self):
         return f'{self.post.title} - {self.ip_address}'
+
+
+class Comment(models.Model):
+    author = models.CharField(max_length=60)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.author} on '{self.post}'"

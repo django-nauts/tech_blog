@@ -1,10 +1,10 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 
-from blog.models import Post, PostVisit
-from blog.forms import PostForm, UpdatePostForm
+from blog.models import Post, PostVisit, Comment
+from blog.forms import PostForm, UpdatePostForm, CommentForm
 from utils.http_service import get_client_ip
 
 
@@ -31,7 +31,7 @@ def blog_category(request, tag):
         'tag': tag,
         'posts': posts,
         'page_obj': page_obj,
-    }
+	    }
     return render(request, 'blog/tech-category.html', context)
 
 
@@ -57,8 +57,8 @@ def blog_create(request):
 # Home page
 def blog_index(request):
 
-    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:2]
-	
+    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:2] 
+    
     if request.method == 'GET':
         posts = Post.published_posts.all().order_by('-created').annotate(visit_count=Count('postvisit__ip_address'))
         paginator = Paginator(posts, 10)
@@ -78,7 +78,7 @@ def blog_index(request):
         context = {
             'posts': posts,
             'page_obj': page_obj,
-			'favorite_posts': favorite_posts,
+            'favorite_posts': favorite_posts,
         }
         return render(request, 'blog/tech-index.html', context)
 
@@ -86,6 +86,19 @@ def blog_index(request):
 # Show each post
 def blog_detail(request, slug):
     post = Post.objects.prefetch_related('postvisit_set').get(slug=slug)
+    comments = Comment.objects.filter(post=post)    
+    
+    form = CommentForm()
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = Comment(
+                author=form.cleaned_data["author"],
+                body=form.cleaned_data["body"],
+                post=post,
+            )
+            comment.save()
+            return HttpResponseRedirect(request.path_info)
 
     # Show similar posts
     post_tags_ids = post.tags.values_list('id', flat=True)
@@ -111,6 +124,8 @@ def blog_detail(request, slug):
         'similar_posts': similar_posts,
         'previous_post': previous_post,
         'next_post': next_post,
+        'comments': comments,
+        'form': CommentForm(),
     }
     return render(request, 'blog/tech-single.html', context)
 
@@ -221,7 +236,10 @@ def header_component(request):
 def sidebar_component(request):
     # Sorting posts based on which ones have a more likes by clients
     favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:4]
+    latest_comments = Comment.objects.order_by('-created_on')[:3]
+    
     context = {
         'favorite_posts': favorite_posts,
+        'latest_comments': latest_comments,
     }
     return render(request, 'shared/sidebar_component.html', context)

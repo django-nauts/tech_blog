@@ -8,7 +8,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('', include('blog.urls')),
 	path('account/', include('app_account.urls')),
-	path('comment/', include('comment.urls')),
 	path('accounts/', include('allauth.urls')),
 	path("__debug__/", include("debug_toolbar.urls")),
 ]

@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 
     # External/Third party apps
     'whitenoise.runserver_nostatic',
-    'comment.apps.CommentConfig',
     'taggit',
     'django_render_partial',
     'allauth',
@@ -160,60 +159,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Defining default User Model
 AUTH_USER_MODEL = 'app_account.User'
-
-# Global settings of comment system
-COMMENT_SETTINGS = {
-    # generated urlhash length
-    'URLHASH_LENGTH': 8,
-
-    # if True, tailwindcss and jquery package will be loaded from static files.
-    'OFFLINE_IMPORTS': True,
-
-    # if None, comments will be shown without profile image
-    # you should set this value as profile image field name
-    # for example our abstract user profile picture field is profile_image
-    # <img src="{{ user.profile_image.url }}" /> so we set PROFILE_IMAGE_FIELD = 'profile.image'
-    # see link blew to create abstract user model
-    # https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#substituting-a-custom-user-model
-    'PROFILE_IMAGE_FIELD': None,
-    # default profile image static path
-    'PROFILE_IMAGE_DEFAULT': 'img/profile.png'
-}
-
-# Config settings of comment system
-
-# the comments need to be set as a(Accepted) to be shown in the comments list.
-# if True, comment status will be set as d(Delivered) otherwise it will be set as a(Accepted).
-STATUS_CHECK = False
-
-# activate spoiler comment mode
-ALLOW_SPOILER = True
-# let users reply to a comment
-ALLOW_REPLY = True
-# let users edit their comment
-ALLOW_EDIT = True
-# let users delete their comment
-ALLOW_DELETE = False
-
-# more than this value will have Read More button in comment content
-CONTENT_WORDS_COUNT = 40
-
-# let users react to a comment
-ALLOW_REACTION = True
-# get emoji or from file source
-REACTION_TYPE = 'emoji'  # emoji / source
-
-# number of comments per page
-# set 0 if you don't want pagination
-PER_PAGE = 10
-
-TIME_TYPE = 1  # 1.both 2.from_now 3.date_time
-TIME_DAYS = 3  # less will use type 2 , more will use type 3
-
-# set direction of comment section
-THEME_DIRECTION = 'ltr'  # ltr / rtl
-# set True for dark mode
-THEME_DARK_MODE = False
 
 # taggit to be case-insensitive
 TAGGIT_CASE_INSENSITIVE = True
