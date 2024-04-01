@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load thumbnail %}
 
 <div class="sidebar">
     <div class="widget">
@@ -69,61 +69,61 @@
         <div class="blog-list-widget">
             <div class="list-group">
                 {% for favorite_post in favorite_posts %}
-                <a href="{{ favorite_post.get_absolute_url }}"
-                   class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="w-100 justify-content-between">
-                        <img src="{{ favorite_post.cover.url }}" alt=""
-                             class="img-fluid float-left">
-                        <h5 class="mb-1">{{ favorite_post.title |truncatechars:15 }}</h5>
-                        <small>{{ favorite_post.created }}</small>
-                    </div>
-                </a>
+                    <a href="{{ favorite_post.get_absolute_url }}"
+                       class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="w-100 justify-content-between">
+                            <img src="{{ favorite_post.cover.url }}" alt=""
+                                 class="img-fluid float-left">
+                            <h5 class="mb-1">{{ favorite_post.title |truncatechars:15 }}</h5>
+                            <small>{{ favorite_post.created }}</small>
+                        </div>
+                    </a>
                 {% endfor %}
 
-{#                <a href="tech-single.html"#}
-{#                   class="list-group-item list-group-item-action flex-column align-items-start">#}
-{#                    <div class="w-100 justify-content-between">#}
-{#                        <img src="{% static 'upload/tech_blog_01.jpg' %}" alt=""#}
-{#                             class="img-fluid float-left">#}
-{#                        <h5 class="mb-1">Let's make an introduction for..</h5>#}
-{#                        <small>11 Jan, 2016</small>#}
-{#                    </div>#}
-{#                </a>#}
-{##}
-{#                <a href="tech-single.html"#}
-{#                   class="list-group-item list-group-item-action flex-column align-items-start">#}
-{#                    <div class="w-100 last-item justify-content-between">#}
-{#                        <img src="{% static 'upload/tech_blog_03.jpg' %}" alt=""#}
-{#                             class="img-fluid float-left">#}
-{#                        <h5 class="mb-1">Did you see the most beautiful..</h5>#}
-{#                        <small>07 Jan, 2016</small>#}
-                    </div>
-                </a>
+                {#                <a href="tech-single.html"#}
+                {#                   class="list-group-item list-group-item-action flex-column align-items-start">#}
+                {#                    <div class="w-100 justify-content-between">#}
+                {#                        <img src="{% static 'upload/tech_blog_01.jpg' %}" alt=""#}
+                {#                             class="img-fluid float-left">#}
+                {#                        <h5 class="mb-1">Let's make an introduction for..</h5>#}
+                {#                        <small>11 Jan, 2016</small>#}
+                {#                    </div>#}
+                {#                </a>#}
+                {##}
+                {#                <a href="tech-single.html"#}
+                {#                   class="list-group-item list-group-item-action flex-column align-items-start">#}
+                {#                    <div class="w-100 last-item justify-content-between">#}
+                {#                        <img src="{% static 'upload/tech_blog_03.jpg' %}" alt=""#}
+                {#                             class="img-fluid float-left">#}
+                {#                        <h5 class="mb-1">Did you see the most beautiful..</h5>#}
+                {#                        <small>07 Jan, 2016</small>#}
             </div>
-        </div><!-- end blog-list -->
-    </div><!-- end widget -->
-	
-    <div class="widget">		  
-        <h2 class="widget-title">Recent Reviews</h2>
-		{% for latest_comment in latest_comments %}
+            </a>
+        </div>
+    </div><!-- end blog-list -->
+</div><!-- end widget -->
+
+<div class="widget">
+    <h2 class="widget-title">Recent Reviews</h2>
+    {% for latest_comment in latest_comments %}
         <div class="blog-list-widget">
-            <div class="list-group">		
+            <div class="list-group">
                 <a href="{{ latest_comment.post.get_absolute_url }}"
                    class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="w-100 justify-content-between">
-					  
+
                         <img src="{{ latest_comment.post.cover.url }}" alt=""
                              class="img-fluid float-left">
-						<h5 class="mb-1"><b>{{ latest_comment.author }}</b>:</h5>
+                        <h5 class="mb-1"><b>{{ latest_comment.author }}</b>:</h5>
                         <h5 class="mb-1">{{ latest_comment.body | slice:"100" }}...</h5>
                     </div>
                 </a>
 
-            </div>			
-			
+            </div>
+
         </div><!-- end blog-list -->
 
-	{% endfor %}
+    {% endfor %}
 
     <div class="widget">
         <h2 class="widget-title">Follow Us</h2>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load render_partial %}
-
+{% load thumbnail %}
 
 {% block content %}
 
@@ -36,30 +36,56 @@
                             <h4 class="small-title">About user</h4>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                    {% if user_page.avatar %}
-                                        <img src="{{ user_page.avatar.url }}" alt="" class="img-fluid rounded-circle">
-                                    {% else %}
-                                        <img src="{% static 'upload/default-user-avatar.jpg' %}"
-                                             class="img-fluid rounded-circle"
-                                             alt="...">
-                                    {% endif %}
+                                    {% thumbnail user_page.avatar "100x100" crop="center" as im %}
+                                        <img src="{{ im.url }}" class="img-fluid rounded-circle" width="100px"
+                                             height="100px">
+                                    {% empty %}
+                                        <img src="{% static 'upload/default-user-avatar.jpg' %}" alt=""
+                                             class="img-fluid rounded-circle" width="100px" height="100px">
+                                    {% endthumbnail %}
                                 </div><!-- end col -->
 
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                                     {% if user_page.get_full_name %}
-                                        <h4><a href="#">{{ user_page.get_full_name }}</a>
+                                        <h4><a href="#">{{ user_page.get_full_name }}</a></h4>
                                     {% else %}
-                                        <h4><a href="#">{{ user_page.email }}</a>
+                                        <h4><a href="#">{{ user_page.email }}</a></h4>
                                     {% endif %}
+
+                                    <!-- un/follow section -->
+                                
+                                    {% with total_followers=user_page.followers.count %}
+                                        <span class="count">
+                                        <span class="total">{{ total_followers }}</span>
+                                        follower{{ total_followers|pluralize }}
+                                        </span>
+                                        <button href="#"
+                                                value="{{ user_page.id }}"
+                                                data-faction="{% if request.user in user_page.followers.all %}un{% endif %}follow"
+                                                class="btn btn-primary pull-right"
+                                                id="follow-button">
+                                            {% if request.user not in user_page.followers.all %}
+                                                Follow
+                                            {% else %}
+                                                Unfollow
+                                            {% endif %}
+                                        </button>
+                                    {% endwith %}
+
+                                    <!-- end of un/follow section -->
+                                
                                     {% if user_page.biography %}
+                                        <br><br>
                                         <p>{{ user_page.biography }}</p>
                                     {% else %}
+                                        <br><br>
                                         <p> The user hasn't completed the biography section yet.</p>
 
                                     {% endif %}
 
                                     <div class="topsocial">
-                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="Facebook"><i
+                                        <a href="#" data-toggle="tooltip" data-placement="bottom"
+                                           title="Facebook"><i
                                                 class="fa fa-facebook"></i></a>
                                         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Youtube"><i
                                                 class="fa fa-youtube"></i></a>
@@ -185,6 +211,104 @@
         </div><!-- end container -->
     </section>
 
+
 {% endblock %}
 
-endblock %}#}
+{% block footer %}
+
+    {#    <script type="text/javascript">#}
+    {#        let url = '/account/user-follow/';#}
+    {#        let options = {#}
+    {#            method: 'POST',#}
+    {#            headers: {'csrfmiddlewaretoken': {{ csrf_token }},}, {#headers: {'X-CSRFToken': csrftoken},#}
+    {#            mode: 'same-origin'#}
+    {#        }#}
+    {#        document.querySelector('a.follow').addEventListener('click', function (e) {#}
+    {#            e.preventDefault();#}
+    {#            let followButton = this;#}
+    {##}
+    {#            // add request body#}
+    {#            let formData = new FormData();#}
+    {#            formData.append('id', followButton.dataset.id);#}
+    {#            formData.append('action', followButton.dataset.action);#}
+    {#            options['body'] = formData;#}
+    {##}
+    {#            // send HTTP request#}
+    {#            fetch(url, options)#}
+    {#                .then(response => response.json())#}
+    {#                .then(data => {#}
+    {#                    if (data['status'] === 'ok') {#}
+    {#                        var previousAction = followButton.dataset.action;#}
+    {#                        // toggle button text and data-action#}
+    {#                        let action = previousAction === 'follow' ? 'unfollow' : 'follow';#}
+    {#                        followButton.dataset.action = action;#}
+    {#                        followButton.innerHTML = action;#}
+    {#                        // update follower count#}
+    {#                        let followerCount = document.querySelector('span.count .total');#}
+    {#                        let totalFollowers = parseInt(followerCount.innerHTML);#}
+    {#                        followerCount.innerHTML = previousAction === 'follow' ? totalFollowers + 1 : totalFollowers - 1;#}
+    {#                    }#}
+    {#                })#}
+    {#        });#}
+    {#    </script>#}
+
+    <script type="text/javascript">
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        console.log(csrftoken)
+
+
+        $(document).on('click', '#follow-button', function (e) {
+            e.preventDefault();
+            let fb = document.getElementById('follow-button')
+            let x = fb.dataset.faction
+
+            console.log(x)
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "account:user_follow" %}',
+                data: {
+                    userid: $('#follow-button').val(),
+                    followAction: fb.dataset.faction,
+                    csrfmiddlewaretoken: csrftoken,
+                    action: 'post',
+                },
+                success: function (json) {
+                    console.log(json)
+
+                    if (json['status'] === 'ok') {
+                        var previousAction = fb.dataset.faction;
+                        // toggle button text and data-action
+                        let Newfaction = previousAction === 'follow' ? 'unfollow' : 'follow';
+                        fb.dataset.faction = Newfaction;
+                        fb.innerHTML = Newfaction;
+                        // update follower count
+                        let followerCount = document.querySelector('span.count .total');
+                        let totalFollowers = parseInt(followerCount.innerHTML);
+                        followerCount.innerHTML = previousAction === 'follow' ? totalFollowers + 1 : totalFollowers - 1;
+                    }
+                },
+                error: function (xhr, errmsg, err) {
+                }
+            });
+        })
+
+    </script>
+{% endblock footer %}

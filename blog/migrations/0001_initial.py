@@ -29,7 +29,6 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('status', models.CharField(choices=[('DF', 'Draft'), ('PB', 'Published'), ('W', 'Withdrawn')], default='DF', max_length=2)),
-                ('likes_count', models.BigIntegerField(default='0')),
                 ('likes_plurality', models.CharField(default='like', max_length=10)),
                 ('user_like', models.BooleanField(blank=True, default=False)),
                 ('bootstrap_class_name', models.CharField(blank=True, default='fa fa-heart-o', max_length=20)),

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load render_partial %}
-
+{% load thumbnail %}
 
 {% block content %}
 
@@ -27,7 +27,7 @@
                                     {% else %}
                                         {{ post.author.email }}
                                     {% endif %}</a></small>
-                                <small><a href="#" title=""><i class="fa fa-eye"></i> 2344</a></small>
+                                <small><a href="#" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}</a></small>
                             </div><!-- end meta -->
 
                             <div class="post-sharing">
@@ -60,29 +60,33 @@
 
                         <!-- like section -->
                         <p>
-                            <span id="like-count"> {{ post.likes_count }} </span>
-                            <span id="like-plurality">{{ post.likes_plurality }}</span>
 
-                            <button id="like-button" value="{{ post.id }}">
-                               <span>
-                               <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" id="svg-id"
-                                    fill="currentColor"
-                                    class="{{ post.bootstrap_class_name }}"
-                                    viewBox="0 0 16 16">
-                                     {% if post.bootstrap_class_name == 'bi bi-heart-fill' %}
-                                         <path fill-rule="evenodd"
-                                               d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                     {% else %}
-                                         <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                                     {% endif %}
-                               </svg>
-                            </span>
+                            {% with total_likes=post.likes.count %}
+                                <span class="count">
+                                <span class="total">{{ total_likes }} </span>
+                                    like{{ total_likes|pluralize }}
+                                </span>
+                                <button value="{{ post.id }}"
+                                        data-likeaction="{% if request.user in post.likes.all %}dis{% endif %}like"
+                                        id="like-button">
+                                    {% if request.user not in post.likes.all %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor"
+                                             class="bi bi-heart" viewBox="0 0 16 16">
+                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor"
+                                             class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                        </svg>
+                                    {% endif %}
+                                </button>
+                            {% endwith %}
 
-                            </button>
-
-                            <span><i class="fa fa-eye">   {{ post.postvisit_set.count }} </i> </span>
                         </p>
-
 
                         <!-- end like section -->
 
@@ -157,7 +161,13 @@
                             <h4 class="small-title">About author</h4>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                    <img src="{{ post.author.avatar.url }}" alt="" class="img-fluid rounded-circle">
+{#                                    <img src="{{ post.author.avatar.url }}" alt="" class="img-fluid rounded-circle">#}
+                                    {% thumbnail post.author.avatar "100x100" crop="center" as im %}
+                                        <img src="{{ im.url }}" class="img-fluid rounded-circle"  width="{{ im.width }}" height="{{ im.height }}">
+                                        {% empty %}
+                                        <img src="{% static 'upload/default-user-avatar.jpg' %}" 
+                                             class="img-fluid rounded-circle" width="{{ im.width }}" height="{{ im.height }}">
+                                    {% endthumbnail %}
                                 </div><!-- end col -->
 
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
@@ -227,42 +237,45 @@
                                 <div class="">
                                     <div class="">
                                         <div class="">
-								    <h3>Leave a comment:</h3>
-								    <form method="post" class="form-wrapper">
-								        {% csrf_token %}
-								        <div>
-								            {{ form.author }}
-								        </div>
-								        <div>
-								            {{ form.body }}
-								        </div>
-								        <button type="submit" class="btn btn-primary">Submit</button>
-								    </form>
+                                            <h3>Leave a comment:</h3>
+                                            <form method="post" class="form-wrapper">
+                                                {% csrf_token %}
+                                                <div>
+                                                    {{ form.author }}
+                                                </div>
+                                                <div>
+                                                    {{ form.body }}
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
 
-									<br>
+                                            <br>
 
-                            <div class="custombox clearfix">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="comments-list">									
-								    <h3>Comments:</h3>
-									<br>
-                                    <div class="media-left">
-								    {% for comment in comments %}
-								        <p>
-										  <img src="{% static 'images/avatar.png' %}" alt="" class="rounded-circle">					  
-										  <h4 class="media-heading user_name"><b>{{ comment.author }}</b><small>On {{ comment.created_on.date }} Wrote:</small></h4>
-								        </p>
-								        <p>
-								            {{ comment.body | linebreaks }}
-											<hr class="invis1">
-								        </p>
-								    {% endfor %}
-									</div>
-							</div>
-								</div>
-									</div>
-										</div>
+                                            <div class="custombox clearfix">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="comments-list">
+                                                            <h3>Comments:</h3>
+                                                            <br>
+                                                            <div class="media-left">
+                                                                {% for comment in comments %}
+                                                                    <p>
+                                                                        <img src="{% static 'images/avatar.png' %}"
+                                                                             alt="" class="rounded-circle">
+                                                                    <h4 class="media-heading user_name">
+                                                                        <b>{{ comment.author }}</b><small>On {{ comment.created_on.date }}
+                                                                        Wrote:</small></h4>
+                                                                    </p>
+                                                                    <p>
+                                                                        {{ comment.body | linebreaks }}
+                                                                    <hr class="invis1">
+                                                                    </p>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -297,21 +310,46 @@
         {#Like a post by ajax#}
         $(document).on('click', '#like-button', function (e) {
             e.preventDefault();
+            let likeButton = document.getElementById('like-button')
             $.ajax({
                 type: 'POST',
                 url: '/like-post/',
                 data: {
                     postid: $('#like-button').val(),
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                    action: 'post'
+                    action: 'post',
+                    likeAction: likeButton.dataset.likeaction
                 },
                 success: function (json) {
-                    document.getElementById("like-count").innerHTML = json['like_count']
-                    document.getElementById("like-plurality").innerHTML = json['like_plurality']
-                    {#document.getElementById("user-like").innerHTML = json['user_like']#}
-                    document.getElementById('svg-id').className = json['current_bootstrap_class'];
+                    if (json['status'] === 'ok') {
+                        var previousAction = likeButton.dataset.likeaction;
+                        // toggle button text and data-action
+                        let NewLikeAction = previousAction === 'like' ? 'dislike' : 'like';
+                        likeButton.dataset.likeaction = NewLikeAction;
+                        {#likeButton.innerHTML = NewLikeAction;#}
+                        if (NewLikeAction === 'like') {
+                            likeButton.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor"
+                                                        class="bi bi-heart" viewBox="0 0 16 16">
+                                <path
+                                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                            </svg>`
 
-                    console.log(json)
+                        } else (NewLikeAction === 'dislike')
+                        {
+                            likeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor"
+                                                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>`
+                        }
+                        // update follower count
+                        let likeCount = document.querySelector('span.count .total');
+                        let totalLikes = parseInt(likeCount.innerHTML);
+                        likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
+                        console.log(json)
+                    }
                 },
                 error: function (xhr, errmsg, err) {
                 }

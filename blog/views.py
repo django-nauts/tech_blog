@@ -57,8 +57,8 @@ def blog_create(request):
 # Home page
 def blog_index(request):
 
-    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:2] 
-    
+    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count','created')[:2]
+
     if request.method == 'GET':
         posts = Post.published_posts.all().order_by('-created').annotate(visit_count=Count('postvisit__ip_address'))
         paginator = Paginator(posts, 10)
@@ -86,15 +86,15 @@ def blog_index(request):
 # Show each post
 def blog_detail(request, slug):
     post = Post.objects.prefetch_related('postvisit_set').get(slug=slug)
-    comments = Comment.objects.filter(post=post)    
-    
+    comments = Comment.objects.filter(post=post)
+
     form = CommentForm()
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = Comment(
-                author=form.cleaned_data["author"],
-                body=form.cleaned_data["body"],
+                author=form.cleaned_data.get('author'),
+                body=form.cleaned_data.get('body'),
                 post=post,
             )
             comment.save()
@@ -110,13 +110,14 @@ def blog_detail(request, slug):
     next_post = Post.objects.filter(publish__gt=post.publish).order_by('publish').first()
 
     # Get IP of each client and add it to db
+    # Show the qunatity of post'visit
     user_ip = get_client_ip(request)
-    user_id=None
+    user_id = None
     if request.user.is_authenticated:
-        user_id=request.user.id
-    is_visited=PostVisit.objects.filter(ip_address=user_ip).exists()
-    if not is_visited:
-        new_visit = PostVisit(post=post, ip_address=user_ip, user=request.user)
+        user_id = request.user
+    user_is_visited = PostVisit.objects.filter(ip_address=user_ip, user=user_id, post=post.id).exists()
+    if not user_is_visited:
+        new_visit = PostVisit(ip_address=user_ip, post=post, user=request.user)
         new_visit.save()
 
     context = {
@@ -177,52 +178,20 @@ def blog_contact(request):
 # Like a post by ajax
 def like_post(request):
     if request.POST.get('action') == 'post':
-        current_like_count = ''
-        current_user_like = 'False'
-        current_like_plurality = ''
-        current_bootstrap_class = "fa fa-heart-o"
         post_id = int(request.POST.get('postid'))
-        post = get_object_or_404(Post, id=post_id)
+        like_action = request.POST.get('likeAction')
 
-        if post.likes.filter(id=request.user.id).exists():
-            post.likes.remove(request.user)
-            post.likes_count -= 1
-            current_like_count = post.likes_count
-            if current_like_count > 1:
-                post.likes_plurality = 'likes'
-                current_like_plurality = post.likes_plurality
-            else:
-                post.likes_plurality = 'like'
-                current_like_plurality = post.likes_plurality
-            post.save()
-
-        else:
-            post.likes.add(request.user)
-            post.likes_count += 1
-            current_like_count = post.likes_count
-            if current_like_count > 1:
-                post.likes_plurality = 'likes'
-                current_like_plurality = post.likes_plurality
-            else:
-                post.likes_plurality = 'like'
-                current_like_plurality = post.likes_plurality
-            post.bootstrap_class_name = "fa fa-heart"
-            current_bootstrap_class = post.bootstrap_class_name
-            post.user_like = True
-            current_user_like = post.user_like
-            post.save()
-
-        print(current_like_count)
-        print(current_like_plurality)
-        print(current_user_like)
-        print(current_bootstrap_class)
-
-        return JsonResponse({
-            'like_count': current_like_count,
-            'user_like': current_user_like,
-            'like_plurality': current_like_plurality,
-            'current_bootstrap_class': current_bootstrap_class,
-        })
+        if post_id and like_action:
+            try:
+                post = Post.objects.get(id=post_id)
+                if like_action == "like":
+                    post.likes.add(request.user)
+                else:
+                    post.likes.remove(request.user)
+                return JsonResponse({'status': 'ok'})
+            except Post.DoesNotExist:
+                return JsonResponse({'status': 'error'})
+        return JsonResponse({'status': 'error'})
 
 
 def footer_component(request):
@@ -235,9 +204,9 @@ def header_component(request):
 
 def sidebar_component(request):
     # Sorting posts based on which ones have a more likes by clients
-    favorite_posts = Post.published_posts.annotate(favorite_count=Count('likes_count')).order_by('-likes_count','-created')[:4]
+    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count','created')[:4]
     latest_comments = Comment.objects.order_by('-created_on')[:3]
-    
+
     context = {
         'favorite_posts': favorite_posts,
         'latest_comments': latest_comments,

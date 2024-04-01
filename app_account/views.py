@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.crypto import get_random_string
@@ -8,7 +9,7 @@ from django.utils.crypto import get_random_string
 from utils.email_service import send_email_to_user
 from .forms import LoginForm, RegisterForm, ForgetPasswordForm, ResetPasswordForm, EditProfileModelForm, \
     ChangePasswordForm
-from .models import User
+from .models import User, Contact
 from blog.models import Post
 
 
@@ -235,3 +236,31 @@ def user_change_password(request):
             'change_pass_form': change_pass_form,
         }
         return render(request, 'app_account/user_change_password.html', context)
+
+
+@login_required
+def user_list(request):
+    users = User.objects.filter(is_active=True)
+    return render(request, 'app_account/user_list.html', {'users': users})
+
+# Follow or unfollow a user
+@login_required
+def user_follow(request):
+    if request.POST.get('action') == 'post':
+        user_id = request.POST.get('userid')
+        action = request.POST.get('followAction')
+        print("=======================================================")
+        print(user_id)
+        print(action)
+        print("=======================================================")
+        if user_id and action:
+            try:
+                user = User.objects.get(id=user_id)
+                if action == 'follow':
+                    Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                else:
+                    Contact.objects.filter(user_from=request.user, user_to=user).delete()
+                return JsonResponse({'status': 'ok'})
+            except User.DoesNotExist:
+                return JsonResponse({'status': 'error'})
+        return JsonResponse({'status': 'error'})

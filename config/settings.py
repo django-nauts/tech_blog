@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.linkedin_oauth2',
     'allauth.socialaccount.providers.instagram',
     "debug_toolbar",
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -216,3 +217,5 @@ ACCOUNT_LOGOUT_ON_GET = True
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+

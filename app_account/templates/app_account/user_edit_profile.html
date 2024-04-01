@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load render_partial %}
-
+{% load thumbnail %}
 
 {% block content %}
 
@@ -31,7 +31,12 @@
                             <h4 class="small-title">Change profile information</h4>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                    <img src="{% static 'upload/author.jpg' %}" alt="" class="img-fluid rounded-circle">
+                                    {% thumbnail current_user.avatar "100x100"  crop="center" as im %}
+                                        <img src="{{ im.url }}" class="img-fluid rounded-circle" width="100px" height="100px">
+                                    {% empty %}
+                                        <img src="{% static 'upload/default-user-avatar.jpg' %}" alt=""
+                                             class="img-fluid rounded-circle" width="100px" height="100px">
+                                    {% endthumbnail %}
                                 </div><!-- end col -->
 
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">

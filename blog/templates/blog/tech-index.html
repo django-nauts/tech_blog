@@ -1,28 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load render_partial %}
-
+{% load thumbnail %}
 
 {% block content %}
 
     <section class="section first-section">
-        <div class="container-fluid">	  
+        <div class="container-fluid">
             <div class="masonry-blog clearfix">
-			  {% for favorite_post in favorite_posts %}
-                <div class="first-slot">
-                    <div class="masonry-box post-media">
-                        <img src="{{ favorite_post.cover.url }}" alt="" class="img-fluid">
-                        <div class="shadoweffect">
-                            <div class="shadow-desc">
-                                <div class="blog-meta">
-                                    <h4><a href="{{ favorite_post.get_absolute_url }}" title="">{{ favorite_post.title }}</a></h4>
-                                </div><!-- end meta -->
-                            </div><!-- end shadow-desc -->
-                        </div><!-- end shadow -->
-                    </div><!-- end post-media -->
-                </div><!-- end first-side -->
-				{% endfor %}
-            </div><!-- end masonry -->			
+                {% for favorite_post in favorite_posts %}
+                    <div class="first-slot">
+                        <div class="masonry-box post-media">
+                            {% thumbnail favorite_post.cover "150x80" crop='center' quality=200 as im %}
+                                <img src="{{ im.url }}" class="img-fluid" width="{{ im.width }}" height="{{ im.height }}">
+                            {% endthumbnail %}
+                            {#                            <img src="{{ favorite_post.cover.url }}" alt="" class="img-fluid">#}
+                            <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <h4><a href="{{ favorite_post.get_absolute_url }}"
+                                               title="">{{ favorite_post.title }}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end first-side -->
+                {% endfor %}
+            </div><!-- end masonry -->
         </div>
     </section>
 
@@ -43,7 +47,11 @@
                                     <div class="col-md-4">
                                         <div class="post-media">
                                             <a href="{{ post.get_absolute_url }}" title="">
-                                                <img src="{{ post.cover.url }}" alt="" class="img-fluid">
+
+                                                {% thumbnail post.cover "100x80" crop="center" quality=100 as im %}
+                                                    <img src="{{ im.url }}" class="img-fluid" width="{{ im.width }}"
+                                                         height="{{ im.height }}">
+                                                {% endthumbnail %}
                                                 <div class="hovereffect">
                                                     <span class=""></span>
                                                 </div><!-- end hover -->
@@ -84,7 +92,6 @@
                                 <div class="col-md-4">
 
                                 </div><!-- end col -->
-
 
 
                                 <hr class="invis">

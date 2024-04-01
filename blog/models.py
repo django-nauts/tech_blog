@@ -34,7 +34,6 @@ class Post(models.Model):
     user_like = models.BooleanField(blank=True, default=False)
     bootstrap_class_name = models.CharField(max_length=20, blank=True, default="fa fa-heart-o")
 
-
     objects = models.Manager()  # The default manager
     published_posts = PostPublishedManager()  # The custom manager
     tags = TaggableManager()
@@ -59,6 +58,7 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
+
 
 
 class PostVisit(models.Model):
