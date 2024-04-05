@@ -3,8 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 
+from django.contrib import messages
+
 from blog.models import Post, PostVisit, Comment
 from blog.forms import PostForm, UpdatePostForm, CommentForm
+
 from utils.http_service import get_client_ip
 
 
@@ -31,7 +34,7 @@ def blog_category(request, tag):
         'tag': tag,
         'posts': posts,
         'page_obj': page_obj,
-	    }
+        }
     return render(request, 'blog/tech-category.html', context)
 
 
@@ -44,6 +47,7 @@ def blog_create(request):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
+            messages.success(request, 'Your post was created successfully!')
             return redirect('blog_index')
     else:
         form = PostForm()
@@ -98,6 +102,8 @@ def blog_detail(request, slug):
                 post=post,
             )
             comment.save()
+            messages.success(request, 'Your comment was created successfully!', \
+                             extra_tags='my_comment')
             return HttpResponseRedirect(request.path_info)
 
     # Show similar posts
@@ -141,6 +147,7 @@ def blog_update(request, slug):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
+            messages.success(request, 'Your post was updated successfully!')          
             return redirect('blog_index')
     else:
         form = UpdatePostForm(instance=post)
@@ -159,6 +166,7 @@ def blog_delete(request, slug):
 
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'Your post was deleted successfully!')
         return redirect('blog_index')
 
     return render(request, 'blog/delete.html', context)

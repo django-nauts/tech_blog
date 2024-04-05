@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -36,6 +37,7 @@ def login_user(request):
                     is_password_correct = user.check_password(user_pass)
                     if is_password_correct:
                         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                        messages.success(request, f'Welcome back, { user }!')
                         return redirect(reverse('blog_index'))
                     else:
                         login_form.add_error('email', 'Your password is wrong')
@@ -117,6 +119,7 @@ def forget_password(request):
             user: User = User.objects.filter(email__iexact=user_email).first()
             if user is not None:
                 send_email_to_user('Change password', user.email, {'user': user}, 'emails/forget_password.html')
+                messages.success(request, 'Your password was updated successfully!')
                 return redirect('blog_index')
         context = {
             'forget_pass_form': forget_pass_form

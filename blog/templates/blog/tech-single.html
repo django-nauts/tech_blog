@@ -232,11 +232,19 @@
 
                         <hr class="invis1">
 
+	  {% if messages %}
+	    <ul class="messages">
+	      {% for message in messages %}
+	        <li class="{{ message.my_comment }}">{{ message }}</li>
+	      {% endfor %}
+	    </ul>
+	  {% endif %}
+						
                         <div class="custombox clearfix">
                             <div class="">
                                 <div class="">
                                     <div class="">
-                                        <div class="">
+                                        <div class="">										  
                                             <h3>Leave a comment:</h3>
                                             <form method="post" class="form-wrapper">
                                                 {% csrf_token %}
