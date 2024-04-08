@@ -13,5 +13,5 @@ urlpatterns = [
     path('user-dashboard/<int:pk>/', views.user_dashboard, name='user_dashboard_page'),
     path('user-edit-profile/', views.user_edit_profile, name='user_edit_profile_page'),
     path('user-change-password/', views.user_change_password, name='user_change_password_page'),
-
+    path('user-follow/', views.user_follow, name='user_follow'),
 ]

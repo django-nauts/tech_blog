@@ -27,7 +27,8 @@
                                     {% else %}
                                         {{ post.author.email }}
                                     {% endif %}</a></small>
-                                <small><a href="#" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}</a></small>
+                                <small><a href="#" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}
+                                </a></small>
                             </div><!-- end meta -->
 
                             <div class="post-sharing">
@@ -161,12 +162,14 @@
                             <h4 class="small-title">About author</h4>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-{#                                    <img src="{{ post.author.avatar.url }}" alt="" class="img-fluid rounded-circle">#}
+                                    {#                                    <img src="{{ post.author.avatar.url }}" alt="" class="img-fluid rounded-circle">#}
                                     {% thumbnail post.author.avatar "100x100" crop="center" as im %}
-                                        <img src="{{ im.url }}" class="img-fluid rounded-circle"  width="{{ im.width }}" height="{{ im.height }}">
-                                        {% empty %}
-                                        <img src="{% static 'upload/default-user-avatar.jpg' %}" 
-                                             class="img-fluid rounded-circle" width="{{ im.width }}" height="{{ im.height }}">
+                                        <img src="{{ im.url }}" class="img-fluid rounded-circle" width="{{ im.width }}"
+                                             height="{{ im.height }}">
+                                    {% empty %}
+                                        <img src="{% static 'upload/default-user-avatar.jpg' %}"
+                                             class="img-fluid rounded-circle" width="{{ im.width }}"
+                                             height="{{ im.height }}">
                                     {% endthumbnail %}
                                 </div><!-- end col -->
 
@@ -216,12 +219,7 @@
                                                 </h4>
                                                 <small><a href="{{ post.get_absolute_url }}"
                                                           title="">{{ post.created.date }}</a></small>
-                                                {#                                                <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by#}
-                                                {#                                                    {% if post.author.fullname %}#}
-                                                {#                                                        {{ post.author.fullname }}#}
-                                                {#                                                    {% else %}#}
-                                                {#                                                        {{ post.author.email }}#}
-                                                {#                                                    {% endif %}</a></small>#}
+                                                </a></small>#}
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
                                     </div><!-- end col -->
@@ -232,70 +230,78 @@
 
                         <hr class="invis1">
 
-	  {% if messages %}
-	    <ul class="messages">
-	      {% for message in messages %}
-	        <li class="{{ message.my_comment }}">{{ message }}</li>
-	      {% endfor %}
-	    </ul>
-	  {% endif %}
-						
-                        <div class="custombox clearfix">
-                            <div class="">
-                                <div class="">
-                                    <div class="">
-                                        <div class="">										  
-                                            <h3>Leave a comment:</h3>
-                                            <form method="post" class="form-wrapper">
-                                                {% csrf_token %}
-                                                <div>
-                                                    {{ form.author }}
-                                                </div>
-                                                <div>
-                                                    {{ form.body }}
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
+                        <div class="custombox clearfix" id="comment-area">
 
-                                            <br>
+                            <h4 class="small-title">{{ comments_count }} Comment{{ comments_count|pluralize }}</h4>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="comments-list">
 
-                                            <div class="custombox clearfix">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="comments-list">
-                                                            <h3>Comments:</h3>
-                                                            <br>
-                                                            <div class="media-left">
-                                                                {% for comment in comments %}
-                                                                    <p>
-                                                                        <img src="{% static 'images/avatar.png' %}"
-                                                                             alt="" class="rounded-circle">
-                                                                    <h4 class="media-heading user_name">
-                                                                        <b>{{ comment.author }}</b><small>On {{ comment.created_on.date }}
-                                                                        Wrote:</small></h4>
-                                                                    </p>
-                                                                    <p>
-                                                                        {{ comment.body | linebreaks }}
-                                                                    <hr class="invis1">
-                                                                    </p>
-                                                                {% endfor %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        {% for comment in comments %}
+                                            <div class="media">
+                                                <a class="media-left" href="#">
+                                                    <img src="{% static 'upload/author_01.jpg' %}" alt=""
+                                                         class="rounded-circle"></a>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading user_name">{{ comment.user.username }}
+                                                        <small>{{ comment.created_on }}</small>
+                                                    </h4>
+                                                    <p>{{ comment.body }}</p>
+                                                    <a class="btn btn-primary btn-sm"
+                                                       onclick="fillParentId({{ comment.id }})">
+                                                        Reply</a>
                                                 </div>
                                             </div>
+                                            {% for reply in comment.comment_set.all %}
+                                                <div class="media last-child">
+                                                    <a class="media-left" href="#">
+                                                        <img src="{% static 'upload/author_02.jpg' %}" alt=""
+                                                             class="rounded-circle"> </a>
+                                                    <div class="media-body">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                             height="16"
+                                                             fill="currentColor" class="bi bi-reply"
+                                                             viewBox="0 0 16 16">
+                                                            <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.7 8.7 0 0 0-1.921-.306 7 7 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254l-.042-.028a.147.147 0 0 1 0-.252l.042-.028zM7.8 10.386q.103 0 .223.006c.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96z"/>
+                                                        </svg>
+                                                        <small>Replied on: {{ reply.created_on }}</small>
+                                                        <h4 class="media-heading user_name">{{ reply.user.username }}
 
-                                        </div>
+                                                        </h4>
+                                                        <p>{{ reply.body }}</p>
+                                                        {#                                                        <a href="#" class="btn btn-primary btn-sm">Reply</a>#}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endfor %}
+
                                     </div>
                                 </div><!-- end col -->
                             </div><!-- end row -->
                         </div><!-- end custom-box -->
 
+
                         <hr class="invis1">
 
-                        <div class="clearfix">
-
+                        <div class="custombox clearfix">
+                            <h4 class="small-title" id="form-area">Leave a comment</h4>
                             <div class="row">
+                                <div class="col-lg-12">
+                                    {% if request.user.is_authenticated %}
+                                        <form class="form-wrapper">
+                                            <input type="hidden" id="parent-id" value="">
+                                            <textarea class="form-control" placeholder="Your comment"
+                                                      id="form-body"></textarea>
+                                            <button type="submit" class="btn btn-primary" id="form-btn"
+                                                    value="{{ post.id }}">Submit Comment
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <p> To leave a comment, please <a
+                                                href="{% url 'account:login_page' %}">login</a>
+                                        </p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div><!-- end page-wrapper -->
@@ -363,6 +369,65 @@
                 }
             });
         })
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+            integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        console.log(csrftoken)
+
+        let formBtn = document.getElementById("form-btn");
+        formBtn.addEventListener("click", function (e) {
+            e.preventDefault()
+            let fd = new FormData()
+            fd.append("formBody", document.getElementById("form-body").value)
+            fd.append("postId", document.getElementById("form-btn").value)
+            fd.append("replyId", document.getElementById("parent-id").value)
+            fd.append("csrfmiddlewaretoken", csrftoken)
+
+            axios.post("/user-comment/", fd)
+                .then(res => {
+                    console.log(res.data)
+                    document.getElementById('comment-area').innerHTML = res.data
+                    document.getElementById("form-body").value = "";
+                    document.getElementById("parent-id").value = "";
+                    let parentId = document.getElementById("parent-id").value
+                    if (parentId !== null && parentId !== '') {
+                        document.getElementById('single_comment_box_' + parentId).scrollIntoView({behavior: "smooth"});
+                    } else {
+                        document.getElementById('comment-area').scrollIntoView({behavior: "smooth"});
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
+
+        function fillParentId(parentId) {
+            document.getElementById('parent-id').value = parentId;
+            console.log(parentId)
+            document.getElementById('form-area').scrollIntoView({behavior: "smooth"});
+
+
+        }
 
     </script>
 {% endblock footer %}

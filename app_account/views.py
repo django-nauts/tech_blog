@@ -83,7 +83,7 @@ def register_user(request):
                 new_user.save()
                 send_email_to_user('activate user account', new_user.email, {'user': new_user},
                                    'emails/activate_account.html')
-                return redirect('app_account:login_page')
+                return redirect('account:login_page')
 
         context = {
             'register_form': register_form
@@ -100,7 +100,7 @@ def activate_user_account(request, email_active_code):
                 user.is_active = True
                 user.email_active_code = get_random_string(72)
                 user.save()
-                return redirect('app_account:login_page')
+                return redirect('account:login_page')
         raise Http404
 
 
@@ -131,7 +131,7 @@ def reset_password(request, email_active_code):
     if request.method == 'GET':
         user: User = User.objects.filter(email_active_code__iexact=email_active_code).first()
         if user is None:
-            return redirect(reverse('app_account:login_page'))
+            return redirect(reverse('account:login_page'))
 
         reset_pass_form = ResetPasswordForm()
 
@@ -146,13 +146,13 @@ def reset_password(request, email_active_code):
         user: User = User.objects.filter(email_active_code__iexact=email_active_code).first()
         if reset_pass_form.is_valid():
             if user is None:
-                return redirect('app_account:login_page')
+                return redirect('account:login_page')
             user_new_pass = reset_pass_form.cleaned_data.get('password')
             user.set_password(user_new_pass)
             user.email_active_code = get_random_string(72)
             user.is_active = True
             user.save()
-            return redirect('app_account:login_page')
+            return redirect('account:login_page')
 
         context = {
             'reset_pass_form': reset_pass_form,

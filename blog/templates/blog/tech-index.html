@@ -11,10 +11,11 @@
                 {% for favorite_post in favorite_posts %}
                     <div class="first-slot">
                         <div class="masonry-box post-media">
-                            {% thumbnail favorite_post.cover "150x80" crop='center' quality=200 as im %}
-                                <img src="{{ im.url }}" class="img-fluid" width="{{ im.width }}" height="{{ im.height }}">
+                            {% thumbnail favorite_post.cover "150x80" crop='center' quality=100 as im %}
+                                <img src="{{ im.url }}" class="img-fluid" width="{{ im.width }}"
+                                     height="{{ im.height }}">
                             {% endthumbnail %}
-                            {#                            <img src="{{ favorite_post.cover.url }}" alt="" class="img-fluid">#}
+                            {#                            <img src="{{ favorite_post.cover.url }}" alt="" class="img-fluid" width="150" height="80">#}
                             <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
@@ -28,21 +29,21 @@
                 {% endfor %}
             </div><!-- end masonry -->
         </div>
-    </section>	
+    </section>
 
     <section class="section">
-	  
-	  {% if messages %}
-	    <ul class="messages">
-	      {% for message in messages %}
-	        <li class="{{ message }}">{{ message }}</li>
-	      {% endfor %}
-	    </ul>
-	  {% endif %}
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <div class="container">
-            <div class="row">			  
-			  
+            <div class="row">
+
                 <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
                     <div class="page-wrapper">
                         <div class="blog-top clearfix">

@@ -34,7 +34,7 @@ def blog_category(request, tag):
         'tag': tag,
         'posts': posts,
         'page_obj': page_obj,
-        }
+    }
     return render(request, 'blog/tech-category.html', context)
 
 
@@ -60,8 +60,8 @@ def blog_create(request):
 
 # Home page
 def blog_index(request):
-
-    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count','created')[:2]
+    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count', 'created')[
+                     :2]
 
     if request.method == 'GET':
         posts = Post.published_posts.all().order_by('-created').annotate(visit_count=Count('postvisit__ip_address'))
@@ -89,22 +89,9 @@ def blog_index(request):
 
 # Show each post
 def blog_detail(request, slug):
-    post = Post.objects.prefetch_related('postvisit_set').get(slug=slug)
-    comments = Comment.objects.filter(post=post)
-
-    form = CommentForm()
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = Comment(
-                author=form.cleaned_data.get('author'),
-                body=form.cleaned_data.get('body'),
-                post=post,
-            )
-            comment.save()
-            messages.success(request, 'Your comment was created successfully!', \
-                             extra_tags='my_comment')
-            return HttpResponseRedirect(request.path_info)
+    post = Post.objects.get(slug=slug)
+    comments = Comment.objects.filter(post=post, reply=None).order_by('-created_on').prefetch_related('comment_set')
+    comments_count = Comment.objects.filter(post_id=post.id).count()
 
     # Show similar posts
     post_tags_ids = post.tags.values_list('id', flat=True)
@@ -121,10 +108,10 @@ def blog_detail(request, slug):
     user_id = None
     if request.user.is_authenticated:
         user_id = request.user
-    user_is_visited = PostVisit.objects.filter(ip_address=user_ip, user=user_id, post=post.id).exists()
-    if not user_is_visited:
-        new_visit = PostVisit(ip_address=user_ip, post=post, user=request.user)
-        new_visit.save()
+        user_is_visited = PostVisit.objects.filter(ip_address=user_ip, post=post.id).exists()
+        if not user_is_visited:
+            new_visit = PostVisit(ip_address=user_ip, post=post, user=request.user)
+            new_visit.save()
 
     context = {
         'post': post,
@@ -132,9 +119,33 @@ def blog_detail(request, slug):
         'previous_post': previous_post,
         'next_post': next_post,
         'comments': comments,
-        'form': CommentForm(),
+        'comments_count': comments_count,
     }
+
     return render(request, 'blog/tech-single.html', context)
+
+
+def user_comment(request):
+    if request.method == 'POST':
+        reply_id = request.POST.get('replyId')
+        post_id = request.POST.get('postId')
+        body = request.POST.get('formBody')
+        user_id = request.user.id
+
+        new_comment = Comment(user_id=user_id, body=body, post_id=post_id, reply_id=reply_id)
+        new_comment.save()
+
+        comments_count = Comment.objects.filter(post_id=post_id).count()
+
+        context = {
+            'comments': Comment.objects.filter(post_id=post_id, reply=None).order_by('-created_on').prefetch_related(
+                'comment_set'),
+            'comments_count': comments_count,
+
+        }
+        return render(request, 'blog/user_comment.html', context)
+
+    return HttpResponse('Ajaxify by Ventuno')
 
 
 # Update post
@@ -147,7 +158,7 @@ def blog_update(request, slug):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
-            messages.success(request, 'Your post was updated successfully!')          
+            messages.success(request, 'Your post was updated successfully!')
             return redirect('blog_index')
     else:
         form = UpdatePostForm(instance=post)
@@ -212,7 +223,8 @@ def header_component(request):
 
 def sidebar_component(request):
     # Sorting posts based on which ones have a more likes by clients
-    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count','created')[:4]
+    favorite_posts = Post.objects.all().annotate(favorite_count=Count('likes')).order_by('-favorite_count', 'created')[
+                     :4]
     latest_comments = Comment.objects.order_by('-created_on')[:3]
 
     context = {

@@ -29,10 +29,7 @@ class Post(models.Model):
                               choices=Status.choices,
                               default=Status.PUBLISHED)
     likes = models.ManyToManyField(User, related_name='like', default=None, blank=True)
-    likes_count = models.BigIntegerField(default='0')
-    likes_plurality = models.CharField(max_length=10, blank=False, null=False, default='like')
-    user_like = models.BooleanField(blank=True, default=False)
-    bootstrap_class_name = models.CharField(max_length=20, blank=True, default="fa fa-heart-o")
+
 
     objects = models.Manager()  # The default manager
     published_posts = PostPublishedManager()  # The custom manager
@@ -72,10 +69,11 @@ class PostVisit(models.Model):
 
 
 class Comment(models.Model):
-    author = models.CharField(max_length=60)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    reply=models.ForeignKey("Comment", on_delete=models.CASCADE, null=True, blank=True)
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"{self.author} on '{self.post}'"
