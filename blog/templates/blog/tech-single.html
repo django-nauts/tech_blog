@@ -16,7 +16,6 @@
                                 <li class="breadcrumb-item"><a href="#">Blog</a></li>
                                 <li class="breadcrumb-item active">{{ post.title }}</li>
                             </ol>
-
                             <h3>{{ post.title }}</h3>
 
                             <div class="blog-meta big-meta">
@@ -65,7 +64,7 @@
                             {% with total_likes=post.likes.count %}
                                 <span class="count">
                                 <span class="total">{{ total_likes }} </span>
-                                    like{{ total_likes|pluralize }}
+                                    <span id="like-plurality">like{{ total_likes|pluralize }}</span>
                                 </span>
                                 <button value="{{ post.id }}"
                                         data-likeaction="{% if request.user in post.likes.all %}dis{% endif %}like"
@@ -320,57 +319,7 @@
 
 {% block footer %}
 
-    <script type="text/javascript">
-        {#Like a post by ajax#}
-        $(document).on('click', '#like-button', function (e) {
-            e.preventDefault();
-            let likeButton = document.getElementById('like-button')
-            $.ajax({
-                type: 'POST',
-                url: '/like-post/',
-                data: {
-                    postid: $('#like-button').val(),
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                    action: 'post',
-                    likeAction: likeButton.dataset.likeaction
-                },
-                success: function (json) {
-                    if (json['status'] === 'ok') {
-                        var previousAction = likeButton.dataset.likeaction;
-                        // toggle button text and data-action
-                        let NewLikeAction = previousAction === 'like' ? 'dislike' : 'like';
-                        likeButton.dataset.likeaction = NewLikeAction;
-                        {#likeButton.innerHTML = NewLikeAction;#}
-                        if (NewLikeAction === 'like') {
-                            likeButton.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor"
-                                                        class="bi bi-heart" viewBox="0 0 16 16">
-                                <path
-                                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                            </svg>`
 
-                        } else (NewLikeAction === 'dislike')
-                        {
-                            likeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor"
-                                                        class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                            </svg>`
-                        }
-                        // update follower count
-                        let likeCount = document.querySelector('span.count .total');
-                        let totalLikes = parseInt(likeCount.innerHTML);
-                        likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
-                        console.log(json)
-                    }
-                },
-                error: function (xhr, errmsg, err) {
-                }
-            });
-        })
-
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
             integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -392,8 +341,9 @@
         }
 
         const csrftoken = getCookie('csrftoken');
-        console.log(csrftoken)
 
+
+        {#comment with ajax#}
         let formBtn = document.getElementById("form-btn");
         formBtn.addEventListener("click", function (e) {
             e.preventDefault()
@@ -405,7 +355,6 @@
 
             axios.post("/user-comment/", fd)
                 .then(res => {
-                    console.log(res.data)
                     document.getElementById('comment-area').innerHTML = res.data
                     document.getElementById("form-body").value = "";
                     document.getElementById("parent-id").value = "";
@@ -429,5 +378,61 @@
 
         }
 
+
+        {#Like a post by ajax#}
+        $(document).on('click', '#like-button', function (e) {
+            e.preventDefault();
+            let likeButton = document.getElementById('like-button')
+
+            $.ajax({
+                type: 'POST',
+                url: '/like-post/',
+                data: {
+                    postid: $('#like-button').val(),
+                    csrfmiddlewaretoken: csrftoken,
+                    action: 'post',
+                    likeAction: likeButton.dataset.likeaction
+                },
+                success: function (json) {
+                    if (json['status'] === 'ok') {
+                        var previousAction = likeButton.dataset.likeaction;
+                        // toggle button text and data-action
+                        let NewLikeAction = previousAction === 'like' ? 'dislike' : 'like';
+                        likeButton.dataset.likeaction = NewLikeAction;
+                        {#likeButton.innerHTML = NewLikeAction;#}
+                        if (NewLikeAction === 'like') {
+                            likeButton.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor"
+                                                        class="bi bi-heart" viewBox="0 0 16 16">
+                                <path
+                                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                            </svg>`
+
+                        } else {
+                            likeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor"
+                                                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>`
+                        }
+                        // update follower count
+                        let likeCount = document.querySelector('span.count .total');
+                        let totalLikes = parseInt(likeCount.innerHTML);
+                        likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
+                        let likePlurality = document.getElementById('like-plurality')
+                        if (likeCount.innerHTML === '1' || likeCount.innerHTML === '0') {
+                            likePlurality.innerHTML = 'like'
+                        } else {
+                            likePlurality.innerHTML = 'likes'
+
+                        }
+                        console.log(json)
+                    }
+                },
+                error: function (xhr, errmsg, err) {
+                }
+            });
+        })
     </script>
 {% endblock footer %}
