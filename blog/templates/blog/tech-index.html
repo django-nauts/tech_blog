@@ -72,12 +72,8 @@
                                         <p>{{ post.body | slice:"300" }}...</p>
                                         <small><a href="{{ post.get_absolute_url }}"
                                                   title="">{{ post.created.date }}</a></small>
-                                        <small><a href="">by
-                                            {% if post.author.fullname %}
-                                                {{ post.author.fullname }}
-                                            {% else %}
-                                                {{ post.author.email }}
-                                            {% endif %}
+                                        <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by
+                                                {{ post.author }}
                                         </a></small>
                                         <small><a href="{{ post.get_absolute_url }}" title=""><i class="fa fa-eye"></i>
                                             {{ post.visit_count }}</a></small>

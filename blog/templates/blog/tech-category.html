@@ -8,12 +8,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                        <h2><i class="fa fa-star bg-orange"></i> {{ category }} <small class="hidden-xs-down hidden-sm-down">Nulla felis eros, varius sit amet volutpat non. </small></h2>
+                        <h2><i class="fa fa-star bg-orange"></i> {{ category }} <small class="hidden-xs-down hidden-sm-down">{{ tag|capfirst }}</small></h2>
                     </div><!-- end col -->
                     <div class="col-lg-4 col-md-4 col-sm-12 hidden-xs-down hidden-sm-down">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Blog</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'blog_index' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'blog_index' %}">Blog</a></li>
                             <li class="breadcrumb-item active">{{ category }}</li>
                         </ol>
                     </div><!-- end col -->                    
@@ -57,8 +57,10 @@
                                         <h4><a href="{{ post.get_absolute_url }}" title="">{{ post.title }}</a></h4>
                                         <p>{{ post.body | slice:"300" }}...</p>
                                         <small><a href="{{ post.get_absolute_url }}" title="">{{ post.created.date }}</a></small>
-                                        <small><a href="{% url 'blog_author' %}" title="">by Matilda</a></small>
-                                        <small><a href="{{ post.get_absolute_url }}" title=""><i class="fa fa-eye"></i> 1114</a></small>
+                                        <small><a href="{% url 'account:user_dashboard_page' post.author.id %}" title="">by
+											{{ post.author }}
+										</a></small>
+                                        <small><a href="" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}</a></small>
 										<br>
 										<a href="{% url 'blog_update' post.slug %}"><img src="{% static 'images/edit.png' %}" alt="edit icon"></a>
 										<a href="{% url 'blog_delete' post.slug %}"><img src="{% static 'images/delete.png' %}" alt="delete icon"></a>

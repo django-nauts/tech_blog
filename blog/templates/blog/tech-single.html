@@ -12,21 +12,18 @@
                     <div class="page-wrapper">
                         <div class="blog-title-area text-center">
                             <ol class="breadcrumb hidden-xs-down">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item"><a href="#">Blog</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'blog_index' %}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'blog_index' %}">Blog</a></li>
                                 <li class="breadcrumb-item active">{{ post.title }}</li>
                             </ol>
                             <h3>{{ post.title }}</h3>
 
                             <div class="blog-meta big-meta">
-                                <small><a href="tech-single.html" title="">{{ post.created.date }}</a></small>
+                                <small><a href="" title="">{{ post.created.date }}</a></small>
                                 <small><a href="{% url 'account:user_dashboard_page' post.author.id %}">by
-                                    {% if post.author.fullname %}
-                                        {{ post.author.fullname }}
-                                    {% else %}
-                                        {{ post.author.email }}
-                                    {% endif %}</a></small>
-                                <small><a href="#" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}
+                                        {{ post.author }}
+								</a></small>
+                                <small><a href="" title=""><i class="fa fa-eye"></i> {{ post.postvisit_set.count }}
                                 </a></small>
                             </div><!-- end meta -->
 
