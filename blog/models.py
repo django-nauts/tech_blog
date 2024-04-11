@@ -28,7 +28,11 @@ class Post(models.Model):
     status = models.CharField(max_length=2,
                               choices=Status.choices,
                               default=Status.PUBLISHED)
-    likes = models.ManyToManyField(User, related_name='like', default=None, blank=True)
+    likes = models.ManyToManyField(User, related_name='like', default=0, blank=True)
+    likes_count = models.BigIntegerField(default='0')
+    likes_plurality = models.CharField(max_length=10, blank=False, null=False, default='like')
+    user_like = models.BooleanField(blank=True, default=False)
+    bootstrap_class_name = models.CharField(max_length=20, blank=True, default="fa fa-heart-o") 
 
 
     objects = models.Manager()  # The default manager

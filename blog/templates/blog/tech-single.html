@@ -36,10 +36,12 @@
                                     <li><a href="#" class="gp-button btn btn-primary"><i class="fa fa-google-plus"></i></a>
                                     </li>
                                 </ul>
+								{% if user.is_staff %}
                                 <a href="{% url 'blog_update' post.slug %}"><img src="{% static 'images/edit.png' %}"
                                                                                  alt="edit icon"></a>
                                 <a href="{% url 'blog_delete' post.slug %}"><img src="{% static 'images/delete.png' %}"
                                                                                  alt="delete icon"></a>
+								{% endif %}
                             </div><!-- end post-sharing -->
                         </div><!-- end title -->
 
@@ -215,7 +217,7 @@
                                                 </h4>
                                                 <small><a href="{{ post.get_absolute_url }}"
                                                           title="">{{ post.created.date }}</a></small>
-                                                </a></small>#}
+                                                </a></small>
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
                                     </div><!-- end col -->

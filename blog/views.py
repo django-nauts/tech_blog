@@ -9,6 +9,7 @@ from blog.models import Post, PostVisit, Comment
 from blog.forms import PostForm, UpdatePostForm, CommentForm
 
 from utils.http_service import get_client_ip
+from taggit.models import Tag
 
 
 # Show specific category
@@ -47,6 +48,10 @@ def blog_create(request):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
+
+            # Save the tags associated with the post
+            form.save_m2m()
+
             messages.success(request, 'Your post was created successfully!')
             return redirect('blog_index')
     else:
@@ -218,7 +223,17 @@ def footer_component(request):
 
 
 def header_component(request):
-    return render(request, 'shared/header_component.html')
+    # Show latest posts of latest tags
+    latest_tags = Tag.objects.order_by('-id')[:4]
+    tag_posts = {}
+    for tag in latest_tags:
+        tag_posts[tag] = Post.objects.filter(tags=tag)[:4]
+    
+    context = {
+        'latest_tags': latest_tags,
+        'tag_posts': tag_posts,
+    }  
+    return render(request, 'shared/header_component.html', context)
 
 
 def sidebar_component(request):
